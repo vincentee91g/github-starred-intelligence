@@ -23,17 +23,18 @@ def main():
     parser = argparse.ArgumentParser(
         description="GitHub Starred Repositories Analyzer & Intelligence Dashboard Generator"
     )
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "--incremental",
         action="store_true",
         help="Run fast incremental sync (only fetch stars added since last run)"
     )
-    parser.add_argument(
+    group.add_argument(
         "--full",
         action="store_true",
         help="Force full re-fetch of all repositories, READMEs, and re-analysis"
     )
-    parser.add_argument(
+    group.add_argument(
         "--generate-only",
         action="store_true",
         help="Skip fetching and analysis, only regenerate HTML dashboard"
@@ -49,11 +50,18 @@ def main():
 
     if args.generate_only:
         print("[*] Mode: Generate HTML dashboard only.")
-        build_groups_data()
-        html_path = generate_html_report()
-        print(f"\n✨ Done! HTML Dashboard generated in {time.time() - start_time:.2f}s:")
-        print(f"👉 {html_path}")
-        return
+        if not config.GROUPS_CACHE_FILE.exists() and not config.ANALYSIS_CACHE_FILE.exists() and not config.REPOS_CACHE_FILE.exists():
+            print("[!] Error: No cache files found to generate report. Run pipeline first without --generate-only.")
+            sys.exit(1)
+        try:
+            build_groups_data()
+            html_path = generate_html_report()
+            print(f"\n✨ Done! HTML Dashboard generated in {time.time() - start_time:.2f}s:")
+            print(f"👉 {html_path}")
+            return
+        except Exception as e:
+            print(f"[!] Error during HTML generation: {e}")
+            sys.exit(1)
 
     # Determine sync mode
     is_incremental = args.incremental or (not args.full and config.STARRED_CACHE_FILE.exists())
@@ -71,8 +79,8 @@ def main():
     print("\n[Step 3/4] Analyzing Repositories (Why, How, What, Metrics)...")
     run_analysis_pipeline(force=args.full)
 
-    # Step 4: Grouping, Cross-Comparisons & Top 3 Selection
-    print("\n[Step 4/4] Grouping Repositories, Comparing Architectures & Selecting Top 3...")
+    # Step 4: Grouping, Cross-Comparisons & Top 5 Selection (20 Categories)
+    print("\n[Step 4/4] Grouping into 20 Categories, Cross-Comparing Architectures & Selecting Top 5...")
     build_groups_data()
 
     # Step 5: HTML Generation

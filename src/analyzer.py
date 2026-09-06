@@ -365,12 +365,12 @@ def analyze_repository(full_name: str, repo_info: Dict[str, Any]) -> Dict[str, A
         prof = CURATED_PROFILES[full_name]
         return {
             "full_name": full_name,
-            "name": full_name.split("/")[-1],
-            "owner": full_name.split("/")[0],
+            "name": full_name.split("/")[-1] if "/" in full_name else full_name,
+            "owner": full_name.split("/")[0] if "/" in full_name else "",
             "url": url,
             "homepage": homepage,
             "stargazers_count": stars,
-            "forks_count": repo_info.get("forks_count", 0),
+            "forks_count": int(repo_info.get("forks_count") or 0),
             "primary_language": lang,
             "topics": topics,
             "license": repo_info.get("license"),
@@ -378,6 +378,7 @@ def analyze_repository(full_name: str, repo_info: Dict[str, Any]) -> Dict[str, A
             "pushed_at": repo_info.get("pushed_at"),
             "category_id": category_id,
             "category_name": cat_meta.get("name", category_id),
+            "readme_has_content": bool(readme),
             "analysis": {
                 "why": prof["why"],
                 "how": prof["how"],
@@ -433,12 +434,12 @@ def analyze_repository(full_name: str, repo_info: Dict[str, Any]) -> Dict[str, A
 
     return {
         "full_name": full_name,
-        "name": full_name.split("/")[-1],
-        "owner": full_name.split("/")[0],
+        "name": full_name.split("/")[-1] if "/" in full_name else full_name,
+        "owner": full_name.split("/")[0] if "/" in full_name else "",
         "url": url,
         "homepage": homepage,
         "stargazers_count": stars,
-        "forks_count": repo_info.get("forks_count", 0),
+        "forks_count": int(repo_info.get("forks_count") or 0),
         "primary_language": lang,
         "topics": topics,
         "license": repo_info.get("license"),
@@ -446,6 +447,7 @@ def analyze_repository(full_name: str, repo_info: Dict[str, Any]) -> Dict[str, A
         "pushed_at": repo_info.get("pushed_at"),
         "category_id": category_id,
         "category_name": cat_meta.get("name", category_id),
+        "readme_has_content": bool(readme),
         "analysis": {
             "why": why_text,
             "how": how_text,
@@ -453,37 +455,49 @@ def analyze_repository(full_name: str, repo_info: Dict[str, Any]) -> Dict[str, A
         }
     }
 
+def is_valid_analysis_entry(entry: Any) -> bool:
+    """Verify that an analysis cache entry has all required non-empty fields."""
+    if not isinstance(entry, dict):
+        return False
+    if not entry.get("full_name") or not entry.get("category_id") or not entry.get("category_name"):
+        return False
+    analysis = entry.get("analysis")
+    if not isinstance(analysis, dict):
+        return False
+    if not (analysis.get("why") and analysis.get("how") and analysis.get("what")):
+        return False
+    return True
+
 def run_analysis_pipeline(force: bool = False) -> Dict[str, Any]:
     """
-    Run the complete analysis on all cached repositories, with incremental caching.
+    Run the complete analysis on all cached repositories, with incremental caching
+    and defensive validation of existing entries.
     """
     if not config.REPOS_CACHE_FILE.exists():
         raise FileNotFoundError(f"Missing {config.REPOS_CACHE_FILE}. Please run fetcher first.")
 
-    with open(config.REPOS_CACHE_FILE, "r", encoding="utf-8") as f:
-        repos_cache = json.load(f)
+    repos_cache = config.safe_load_json(config.REPOS_CACHE_FILE, default={})
+    if not repos_cache:
+        raise ValueError(f"{config.REPOS_CACHE_FILE} is empty or corrupted. Please run fetcher.")
 
     analysis_cache: Dict[str, Any] = {}
     if config.ANALYSIS_CACHE_FILE.exists() and not force:
-        try:
-            with open(config.ANALYSIS_CACHE_FILE, "r", encoding="utf-8") as f:
-                analysis_cache = json.load(f)
+        analysis_cache = config.safe_load_json(config.ANALYSIS_CACHE_FILE, default={})
+        if analysis_cache:
             print(f"[*] Loaded existing analysis for {len(analysis_cache)} repos.")
-        except Exception as e:
-            print(f"Warning loading analysis cache: {e}")
 
     updated_count = 0
     for full_name, r_info in repos_cache.items():
-        if full_name not in analysis_cache or force:
+        existing = analysis_cache.get(full_name)
+        if full_name not in analysis_cache or force or not is_valid_analysis_entry(existing):
             analyzed = analyze_repository(full_name, r_info)
             analysis_cache[full_name] = analyzed
             updated_count += 1
 
     print(f"[✓] Analysis pipeline processed {updated_count} new/updated repositories (Total: {len(analysis_cache)}).")
 
-    # Save analysis cache
-    with open(config.ANALYSIS_CACHE_FILE, "w", encoding="utf-8") as f:
-        json.dump(analysis_cache, f, ensure_ascii=False, indent=2)
+    # Save analysis cache atomically
+    config.atomic_save_json(config.ANALYSIS_CACHE_FILE, analysis_cache)
 
     return analysis_cache
 
