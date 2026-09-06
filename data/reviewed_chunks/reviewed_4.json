@@ -1,0 +1,2110 @@
+{
+  "vercel-labs/agent-browser": {
+    "full_name": "vercel-labs/agent-browser",
+    "name": "agent-browser",
+    "owner": "vercel-labs",
+    "url": "https://github.com/vercel-labs/agent-browser",
+    "homepage": "https://agent-browser.dev",
+    "stargazers_count": 42010,
+    "forks_count": 2801,
+    "primary_language": "Rust",
+    "topics": [],
+    "license": "Apache-2.0",
+    "starred_at": "2026-03-13T12:43:23Z",
+    "pushed_at": "2026-09-04T18:12:39Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "傳統瀏覽器自動化方案（如 Puppeteer、Playwright）多針對人類前端測試設計，啟動緩慢、資源開銷龐大且回傳資訊冗長，對 LLM / AI 代理極不友善。AI Agent 急需一套輕量、極速、原生支援 Chrome DevTools Protocol 且能輸出結構化狀態的命令列瀏覽器操作工具。",
+      "how": "基於 Rust 開發的高效能原生 CLI，透過 CDP（Chrome DevTools Protocol）直接與 Chromium/Chrome 通訊；支援常駐會話、多標籤頁狀態隔離、DOM 語意快照、視覺截圖與即時互動控制，並相容 Agent Skills 規範。",
+      "what": "提供 agent-browser 終端指令，包含 open、click、type、screenshot、eval、wait、tab 等子命令，支援無頭/有頭模式切換、語意節點選取與視覺截圖回傳，為自主 Agent 提供完整的網頁探索與操作能力。"
+    },
+    "bullets": [
+      "Chrome** - Run `agent-browser install` to download Chrome from Chrome for Testing (Google's official automation channel). Existing Chrome, Brave, Playwright, and Puppeteer installations are detected automatically. No Playwright or Node.js required for the daemon.",
+      "Node.js 24+ and pnpm 11+** - Only needed when building from source.",
+      "Rust** - Only needed when building from source (see From Source above)."
+    ]
+  },
+  "karpathy/autoresearch": {
+    "full_name": "karpathy/autoresearch",
+    "name": "autoresearch",
+    "owner": "karpathy",
+    "url": "https://github.com/karpathy/autoresearch",
+    "homepage": null,
+    "stargazers_count": 95286,
+    "forks_count": 13395,
+    "primary_language": "Python",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-03-13T12:37:14Z",
+    "pushed_at": "2026-03-26T00:07:37Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "由 Andrej Karpathy 發起的自主研究探索實驗。過去機器學習研究仰賴人類工程師在會議間隙手動設計實驗、調整超參數與修改架構；本專案旨在探索由 AI Agent 自主接管模型研發全流程，在單張 GPU 上持續不斷嘗試代碼改動、評估效能並自主演進。",
+      "how": "採用極度克制的極簡三模組架構：prepare.py（固定的資料準備、BPE 分詞與評估指標，Agent 不可修改）、train.py（包含完整 GPT 模型架構、Muon + AdamW 優化器與訓練迴圈，由 Agent 自主編程迭代）、program.md（人類給予 Agent 的研究指引）。Agent 每次修改程式碼後執行 5 分鐘短跑訓練，根據驗證損失（val loss）嚴格決定保留改動或自動 Git 回滾。",
+      "what": "交付一套完整可自主運行的單卡 LLM 研究 Agent Harness，包含自動化實驗記錄、收斂曲線視覺化、Git 版本自動回滾與提交機制，讓開發者夜間放任 Agent 自主探索並在清晨收穫優化模型。"
+    },
+    "bullets": [
+      "`prepare.py`** — fixed constants, one-time data prep (downloads training data, trains a BPE tokenizer), and runtime utilities (dataloader, evaluation). Not modified.",
+      "`train.py`** — the single file the agent edits. Contains the full GPT model, optimizer (Muon + AdamW), and training loop. Everything is fair game: architecture, hyperparameters, optimizer, batch size, etc. **This file is edited and iterated on by the agent**.",
+      "`program.md`** — baseline instructions for one agent. Point your agent here and let it go. **This file is edited and iterated on by the human**.",
+      "Single file to modify.** The agent only touches `train.py`. This keeps the scope manageable and diffs reviewable.",
+      "Fixed time budget.** Training always runs for exactly 5 minutes, regardless of your specific platform. This means you can expect approx 12 experiments/hour and approx 100 experiments while you sleep. There are two upsides of this design decision. First, this makes experiments directly comparable regardless of what the agent changes (model size, batch size, architecture, etc). Second, this means that autoresearch will find the most optimal model for your platform in that time budget. The downside is that your runs (and results) become not comparable to other people running on other compute platforms.",
+      "Self-contained.** No external dependencies beyond PyTorch and a few small packages. No distributed training, no complex configs. One GPU, one file, one metric.",
+      "To get half-decent results I'd use a dataset with a lot less entropy, e.g. this TinyStories dataset. These are GPT-4 generated short stories. Because the data is a lot narrower in scope, you will see reasonable results with a lot smaller models (if you try to sample from them after training).",
+      "You might experiment with decreasing `vocab_size`, e.g. from 8192 down to 4096, 2048, 1024, or even - simply byte-level tokenizer with 256 possibly bytes after utf-8 encoding."
+    ]
+  },
+  "notoriouslab/doc-cleaner": {
+    "full_name": "notoriouslab/doc-cleaner",
+    "name": "doc-cleaner",
+    "owner": "notoriouslab",
+    "url": "https://github.com/notoriouslab/doc-cleaner",
+    "homepage": "https://notoriouslab.github.io/doc-cleaner/",
+    "stargazers_count": 310,
+    "forks_count": 40,
+    "primary_language": "Python",
+    "topics": [
+      "bank-statement",
+      "pdf",
+      "python",
+      "apple-keynote",
+      "apple-numbers",
+      "epub",
+      "iwork"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-03-13T12:25:52Z",
+    "pushed_at": "2026-08-20T07:19:33Z",
+    "category_id": "web_doc_parsing",
+    "category_name": "多模態數據採集、檔案解析與結構化轉換",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "日常工作中各類文件（PDF、Office、Apple Keynote/Numbers、EPUB 電子書等）格式各異，在餵入 LLM 或 RAG 知識庫前常因排版混亂、雜訊冗餘與中文相容性差而導致解析品質劣化，且企業使用者高度擔憂將敏感文件上傳至第三方雲端轉換服務。",
+      "how": "基於 Python 打造，整合多款專用本地文件解析庫，全程 100% 本地離線執行，零 API Key 依賴與零隱私外洩風險；針對複雜表格、雙欄排版與中文標點進行結構重建與正則清洗，保留完整語意層次。",
+      "what": "支援 PDF、Word、Excel、PowerPoint、Apple iWork 全系列（Pages/Keynote/Numbers）、EPUB、TXT 等 16 種檔案格式；提供一鍵批次清洗轉換命令列工具與跨平台打包執行檔，直接輸出乾淨標準的 Markdown 文件。"
+    },
+    "bullets": [
+      "🖥️ **桌面 App** — 拖放文件或整個資料夾、自選輸出位置、轉後可即時預覽；零設定，macOS/Windows 雙擊即用（非技術用戶首選）",
+      "📊 **金融對帳單** — Big5/CP950 自動偵測，交易清單與數字完整無損",
+      "🎬 **簡報／電子書** — Keynote 投影片、EPUB 章節，依閱讀順序抽成 Markdown",
+      "📄 **多格式批處理** — 16 種格式混合輸入，統一輸出 Markdown（CLI）",
+      "🔒 **隱私優先** — `--ai none` 純文字或 Ollama 本地推理，文件不上雲端",
+      "🤖 **AI Agent 整合** — OpenClaw 等框架可直接 shell 呼叫，附帶 `SKILL.md` 支援",
+      "DOCX**：`python-docx` 直接提取 → Markdown pipe table",
+      "XLSX/CSV**：`pandas.to_markdown()` — 所有工作表"
+    ]
+  },
+  "paperclipai/paperclip": {
+    "full_name": "paperclipai/paperclip",
+    "name": "paperclip",
+    "owner": "paperclipai",
+    "url": "https://github.com/paperclipai/paperclip",
+    "homepage": "https://paperclip.ing",
+    "stargazers_count": 80071,
+    "forks_count": 14699,
+    "primary_language": "TypeScript",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-03-12T23:33:26Z",
+    "pushed_at": "2026-09-06T00:16:09Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "隨著團隊大規模引入 Claude Code、OpenClaw、Codex 等多種自主編程 Agent，開發者面臨開啟數十個終端視窗、無法全局追蹤任務進度、缺乏協同指派機制與難以控管 Token 預算開銷的混亂局面。",
+      "how": "基於 TypeScript / Node.js 構建的開源 Agent 管理作業系統與 Web 儀表板；以「虛擬 AI 公司/組織」為核心架構，統一抽象各類 Agent 的連線端點、執行狀態機、心跳監控與授權層級，提供結構化的任務隊列與事件驅動分發管道。",
+      "what": "提供具現代感的多 Agent Web 管理後台，具備即時終端輸出串流、任務看板指派、多 Agent 協同審批工作流、預算額度警報與自託管部署方案。"
+    },
+    "bullets": [
+      "✅ You want to build **autonomous AI organizations**",
+      "✅ You **coordinate many different agents** (OpenClaw, Codex, Claude, Cursor) toward a common goal",
+      "✅ You have **20 simultaneous Claude Code terminals** open and lose track of what everyone is doing",
+      "✅ You want agents running **autonomously 24/7**, but still want to audit work and chime in when needed",
+      "✅ You want to **monitor costs** and enforce budgets",
+      "✅ You want a process for managing agents that **feels like using a task manager**",
+      "✅ You want to manage your autonomous businesses **from your phone**"
+    ]
+  },
+  "andrewyng/context-hub": {
+    "full_name": "andrewyng/context-hub",
+    "name": "context-hub",
+    "owner": "andrewyng",
+    "url": "https://github.com/andrewyng/context-hub",
+    "homepage": null,
+    "stargazers_count": 13961,
+    "forks_count": 1208,
+    "primary_language": "JavaScript",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-03-10T14:52:09Z",
+    "pushed_at": "2026-05-31T18:41:45Z",
+    "category_id": "context_memory_rag",
+    "category_name": "上下文工程、長期記憶層與本地 RAG",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "由吳恩達（Andrew Ng）團隊打造，解決 AI 編程代理（Coding Agents）在長上下文工作流中因知識過期而幻覺調用不存在的 API，以及在單次會話結束後即遺忘所學經驗的痛點。",
+      "how": "以輕量 CLI 工具 chub 為介面，所有技術文件與技能全部以版本化的開源 Markdown 格式儲存；專門針對 AI Agent 的指令呼叫進行優化，讓 Agent 在需要時主動搜尋精準 API 規範，並能將本次任務遇到的踩坑經驗透過註釋機制持久化回寫。",
+      "what": "提供 chub 命令列工具（支援 search、get、annotate 等操作）與開源維護的高品質技術文件庫，讓 Coding Agent 能動態獲取最新文件並累積跨會話長期經驗。"
+    },
+    "bullets": []
+  },
+  "openclaw/clawhub": {
+    "full_name": "openclaw/clawhub",
+    "name": "clawhub",
+    "owner": "openclaw",
+    "url": "https://github.com/openclaw/clawhub",
+    "homepage": "https://clawhub.ai",
+    "stargazers_count": 9393,
+    "forks_count": 1465,
+    "primary_language": "TypeScript",
+    "topics": [
+      "directory",
+      "skill"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-03-06T01:11:52Z",
+    "pushed_at": "2026-09-06T00:41:56Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "OpenClaw 作為自主 AI Agent 平台，急需一個中央化的公開技能與套件註冊中心（Registry），讓全球開發者能夠發布、版本控制、探索與一鍵安裝各類文字化 Agent Skills、擴充外掛與全自主 Agent 模板。",
+      "how": "前端基於 TanStack Start（React 19、Vite/Nitro）打造快速瀏覽介面，後端基於 Convex 雲端資料庫與檔案儲存；內建語意向量搜尋引擎與審核機制，並透過公開 REST API 與 CLI (clawhub) 實現無縫認證與發布工作流。",
+      "what": "交付 OpenClaw 官方技能市集平台與 clawhub CLI 工具，支援瀏覽技能、即時渲染 SKILL.md、版本化發布、套件審查、用量遙測統計以及程式碼外掛目錄。"
+    },
+    "bullets": [
+      "Browse skills + render their `SKILL.md`.",
+      "Publish new skill versions with changelogs + tags (including `latest`).",
+      "Rename an owned skill without breaking old links or installs.",
+      "Merge duplicate owned skills into one canonical slug.",
+      "Search via embeddings (vector index) instead of brittle keywords.",
+      "Star + comment; admins/mods can curate and approve skills.",
+      "Pin local skill installs so updates and force reinstalls cannot overwrite frozen copies.",
+      "Browse OpenClaw packages with family/trust/capability metadata."
+    ]
+  },
+  "googleworkspace/cli": {
+    "full_name": "googleworkspace/cli",
+    "name": "cli",
+    "owner": "googleworkspace",
+    "url": "https://github.com/googleworkspace/cli",
+    "homepage": "https://developers.google.com/workspace",
+    "stargazers_count": 30752,
+    "forks_count": 1803,
+    "primary_language": "Rust",
+    "topics": [
+      "google-workspace",
+      "agent-skills",
+      "ai-agent",
+      "automation",
+      "cli",
+      "discovery-api",
+      "google-admin",
+      "google-api",
+      "google-calendar",
+      "google-chat"
+    ],
+    "license": "Apache-2.0",
+    "starred_at": "2026-03-05T11:22:07Z",
+    "pushed_at": "2026-09-05T17:07:06Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "Google Workspace 包含 Drive、Gmail、Calendar、Docs、Sheets、Chat、Admin 等數十種複雜 API，傳統開發需分別閱讀各別 SDK 與處理繁瑣 OAuth 認證流程；AI Agent 與開發者亟需一個統一、零樣板代碼、輸出結構化 JSON 的命令列介面與 Agent Skills。",
+      "how": "基於 Rust 打造高效能單一執行檔 gws，並非寫死靜態命令，而是動態讀取 Google 官方 Discovery Service 實時生成所有 API 命令端點；內建安全的 OAuth 憑證管理，並將 API 功能封裝為 40+ 個標準化的 Agent Skills。",
+      "what": "交付統一的 Google Workspace CLI 工具 gws 與完整 Agent 技能組，支援對 Drive、Gmail、行事曆、試算表等服務進行快速 CRUD 操作、結構化 JSON 輸出以及為 Claude Code、Codex 等代理提供開箱即用的 Workspace 調用技能。"
+    },
+    "bullets": [
+      "Prerequisites",
+      "Installation",
+      "Quick Start",
+      "Authentication",
+      "AI Agent Skills",
+      "Advanced Usage",
+      "Environment Variables",
+      "Architecture"
+    ]
+  },
+  "koala73/worldmonitor": {
+    "full_name": "koala73/worldmonitor",
+    "name": "worldmonitor",
+    "owner": "koala73",
+    "url": "https://github.com/koala73/worldmonitor",
+    "homepage": "https://worldmonitor.app",
+    "stargazers_count": 85622,
+    "forks_count": 12929,
+    "primary_language": "TypeScript",
+    "topics": [
+      "ai",
+      "dashboard",
+      "geopolitics",
+      "monitoring",
+      "news",
+      "osint",
+      "opensource",
+      "palantir",
+      "situation",
+      "agent"
+    ],
+    "license": "AGPL-3.0",
+    "starred_at": "2026-03-04T13:28:24Z",
+    "pushed_at": "2026-09-05T20:19:33Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "當前地緣政治局勢動盪、供應鏈與關鍵基礎設施風險頻發，新聞與情報分散在數百個不同語系與即時數據源中；分析師與大眾缺乏一個整合即時 OSINT 情報、結合 AI 多語言提煉與全球態勢感知（Situational Awareness）的統一儀表板。",
+      "how": "基於 TypeScript、React/Next.js 全端架構，即時串接全球新聞 Feed、地震與極端氣象、海運航道、航班追蹤與大宗商品數據；後端結合 LLM 進行多語言即時事件摘要、重要度研判與關聯分析；提供 Web 介面與跨語言 SDK (Node.js, Python, Ruby, Go)。",
+      "what": "提供全功能的開源全球態勢感知儀表板（World Monitor），包含地緣衝突地圖、基礎設施故障即時預警、財經/能源專屬變體、命令列 CLI 工具與程式化資料調用 SDK。"
+    },
+    "bullets": [
+      "Curated news feeds** across global and regional categories, AI-synthesized into briefs",
+      "Dual map engine** — 3D globe (globe.gl) and WebGL flat map (deck.gl) with a shared map-layer catalog",
+      "Panel inventory** — concrete panel implementations across specialized variants",
+      "Cross-stream correlation** — military, economic, disaster, and escalation signal convergence",
+      "Country Instability Index (CII)** — live CII v8 scores, bands, and approximate 24-hour movement for 31 Tier-1 countries",
+      "Finance radar** — stock exchanges, commodities, crypto, and a market composite",
+      "Local AI** — run everything with Ollama, no API keys required",
+      "Site variants** from a single codebase (world, tech, finance, commodity, happy, energy)"
+    ]
+  },
+  "Yeachan-Heo/oh-my-claudecode": {
+    "full_name": "Yeachan-Heo/oh-my-claudecode",
+    "name": "oh-my-claudecode",
+    "owner": "Yeachan-Heo",
+    "url": "https://github.com/Yeachan-Heo/oh-my-claudecode",
+    "homepage": "https://oh-my-claudecode.dev",
+    "stargazers_count": 39029,
+    "forks_count": 3495,
+    "primary_language": "TypeScript",
+    "topics": [
+      "agentic-coding",
+      "ai-agents",
+      "claude",
+      "claude-code",
+      "oh-my-opencode",
+      "opencode",
+      "vibe-coding",
+      "automation",
+      "multi-agent-systems",
+      "parallel-execution"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-03-03T23:52:53Z",
+    "pushed_at": "2026-09-05T17:10:39Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "單一 Claude Code 實例在面對大型專案或複雜重構時容易陷入注意力漂移、Token 消耗過快或單執行緒效率低下的瓶頸；開發者需要一套團隊化、多 Agent 協同（Teams-first）的平行架構來分工解決軟體工程難題。",
+      "how": "基於 TypeScript 開發，以「西西弗斯（Sisyphus）」協同引擎為核心，引入多層次團隊角色（如 Leader、Architect、Coder、Reviewer）；透過事件串流與狀態機協同多個背景執行的 Claude Code 實例，支援任務平行拆解、自動化重試與階段性代碼驗證。",
+      "what": "提供 oh-my-claudecode CLI 與外掛套件，具備多 Agent 團隊協同、任務平行派發、智慧衝突仲裁、多語言支援（中/英/韓/日等）以及開箱即用的安裝配置嚮導。"
+    },
+    "bullets": [
+      "Terminal CLI commands**: run `omc ...` from your shell after installing the npm/runtime path (`npm i -g oh-my-claude-sisyphus@latest`) or from a local checkout.",
+      "In-session skills**: run `/...` inside a Claude Code session after installing the plugin/setup flow.",
+      "VS Code / IDE extension**: OMC does not ship a VS Code extension and does not document extension-specific install or automation flows. Use the Claude Code plugin or terminal CLI surfaces above; IDE integrations are only an optional way to access Claude Code itself.",
+      "Agent SDK / programmatic usage**: the npm package exports TypeScript helpers such as `createOmcSession()` and prompt expansion utilities for local Node.js programs using `@anthropic-ai/claude-agent-sdk`. This is a library surface, not a replacement for the Claude Code plugin UI.",
+      "CI/CD and headless automation**: prefer deterministic terminal commands (`omc setup`, `omc ask`, `omc session search`, repository scripts such as `npm run sync-metadata:v"
+    ]
+  },
+  "wickedapp/openclaw-office": {
+    "full_name": "wickedapp/openclaw-office",
+    "name": "openclaw-office",
+    "owner": "wickedapp",
+    "url": "https://github.com/wickedapp/openclaw-office",
+    "homepage": null,
+    "stargazers_count": 191,
+    "forks_count": 39,
+    "primary_language": "JavaScript",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-03-01T02:52:53Z",
+    "pushed_at": "2026-03-24T17:17:23Z",
+    "category_id": "visualization_diagrams",
+    "category_name": "圖表可視化、設計系統與投影片簡報",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "在多 Agent 協同架構（如 OpenClaw）中，代理人之間的內部對話、任務派發與執行流程通常隱藏在後端終端日誌中，開發者與使用者難以直觀理解當前誰在工作、誰在協同或誰遇到了瓶頸。",
+      "how": "基於 JavaScript / Web 技術打造，採用懷舊像素藝術（Pixel Art）精靈動畫風格模擬虛擬辦公室場景；透過 WebSocket 即時串接 OpenClaw 伺服器事件，將 Agent 的思考、編程、工具調用與對話即時映射為辦公室工位與角色互動動畫。",
+      "what": "提供開源的 OpenClaw 虛擬辦公室視覺化儀表板，支援即時多 Agent 工作狀態展示、角色工位自訂、多步驟調度鏈動態高亮以及辦公室場景生成配置。"
+    },
+    "bullets": [
+      "🎨 AI-generated office scenes matching your style",
+      "⚡ Real-time workflow animations (task delegation, agent collaboration)",
+      "🔗 Multi-step chain visualization (Agent A → Orchestrator → Agent B)",
+      "📊 Activity log, cost savings tracker, team stats",
+      "🔌 Works with any OpenClaw instance",
+      "Connect to your OpenClaw gateway** and auto-detect all your agents",
+      "Ask for your office style** — Cyberpunk, Minimalist, Cozy, Corporate, or Custom",
+      "Generate a custom office image** using Google Gemini (optional — works without it)"
+    ]
+  },
+  "huggingface/skills": {
+    "full_name": "huggingface/skills",
+    "name": "skills",
+    "owner": "huggingface",
+    "url": "https://github.com/huggingface/skills",
+    "homepage": "https://huggingface.co",
+    "stargazers_count": 11021,
+    "forks_count": 740,
+    "primary_language": "Python",
+    "topics": [],
+    "license": "Apache-2.0",
+    "starred_at": "2026-02-27T06:28:40Z",
+    "pushed_at": "2026-09-03T10:03:18Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "Hugging Face 擁有龐大的開源模型、資料集與 Spaces 生態，但在終端 Coding Agent 工作流中，代理往往欠缺標準化工具直接操作 Hub；開發者需要一組原生規範的 Agent Skills 讓 Agent 能自主搜索、微調、評估與部署模型。",
+      "how": "遵循標準化 Agent Skills 規範（agentskills.io），基於 Python 與 hf-cli 打造；支援按需動態安裝工作流技能（hf skills add <skill-name>），並透過標準 CLI / MCP 協議與各類 Agent 通訊，相容 Claude Code、Codex、Cursor 等終端主機。",
+      "what": "交付官方 Hugging Face Agent 技能庫，涵蓋模型探索與下載、自訂資料集構建、輕量化模型微調、Benchmark 評估、以及將應用一鍵部署至 Spaces 的完整自動化技能鏈。"
+    },
+    "bullets": [
+      "Cursor Marketplace (",
+      "Codex Plugins Directory (",
+      "Register the repository as a plugin marketplace:",
+      "Install the CLI skill:",
+      "To install another Hugging Face skill, use the `hf` CLI:",
+      "Copy or symlink any skills you want to use from this repository's `skills/` directory into one of Codex's standard `.agents/skills` locations (for example, `$REPO_ROOT/.agents/skills` or `$HOME/.agents/skills`) as described in the Codex Skills guide.",
+      "Once a skill is available in one of those locations, Codex will discover it using the Agent Skills standard and load the `SKILL.md` instructions when it decides to use that skill or when you explicitly invoke it.",
+      "If your Codex setup still relies on `AGENTS.md`, you can use the generated `agentsmd/AGENTS.md` file in this repo as a fallback bundle of instructions."
+    ]
+  },
+  "muratcankoylan/Agent-Skills-for-Context-Engineering": {
+    "full_name": "muratcankoylan/Agent-Skills-for-Context-Engineering",
+    "name": "Agent-Skills-for-Context-Engineering",
+    "owner": "muratcankoylan",
+    "url": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering",
+    "homepage": null,
+    "stargazers_count": 17926,
+    "forks_count": 1482,
+    "primary_language": "Python",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-02-27T06:28:09Z",
+    "pushed_at": "2026-08-19T01:55:00Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "在生產級 AI Agent 系統中，限制 Agent 能力的往往不是模型本身，而是 Context 視窗中充斥的噪訊、注意力衰減以及缺乏結構化的記憶架構；業界缺乏一套針對上下文工程（Context Engineering）與 Harness 設計的標準技能指南。",
+      "how": "由上下文工程先驅 Muratcan Koylan 整理構建，並獲多篇學術頂會論文（如北京大學 MCE）引用；系統性劃分基礎概念（Foundational）、架構模式（Architectural）與運維實踐（Operational），以標準 Agent Skills 格式提供可執行的約束與策略。",
+      "what": "提供涵蓋上下文動態修剪、長期記憶壓縮、多 Agent 上下文隔離、Tool 輸出過濾與 Harness 評估等維度的完整開源技能集合，幫助工程師構建高精準度、低 Token 浪費的生產級 Agent。"
+    },
+    "bullets": [
+      "Meta Context Engineering via Agentic Skill Evolution, Peking University State Key Laboratory of General Artificial Intelligence (2025)",
+      "Agent Harness Engineering: A Survey, CMU, Yale, JHU, NEU, Tulane, UAB, OSU, Virginia Tech, and Amazon (2026)",
+      "Select `Browse and install plugins`",
+      "Select `context-engineering-marketplace`",
+      "Select `context-engineering`",
+      "Select `Install now`"
+    ]
+  },
+  "vercel/chat": {
+    "full_name": "vercel/chat",
+    "name": "chat",
+    "owner": "vercel",
+    "url": "https://github.com/vercel/chat",
+    "homepage": "https://chat-sdk.dev/",
+    "stargazers_count": 2342,
+    "forks_count": 300,
+    "primary_language": "TypeScript",
+    "topics": [
+      "ai",
+      "chat",
+      "discord",
+      "google-chat",
+      "slack",
+      "teams",
+      "vercel"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-27T00:12:36Z",
+    "pushed_at": "2026-09-05T06:16:11Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "企業聊天機器人常需同時支援 Slack、Microsoft Teams、Discord、Google Chat、Telegram 等多種通訊軟體，各平台 API 認證、事件格式、訊息排版與 Webhook 機制完全不同，導致開發者重複編寫大量繁複適配程式碼。",
+      "how": "由 Vercel 打造的統一 TypeScript SDK，提供高度抽象的統一事件模型與訊息格式轉換層；透過獨立外掛式適配器（@chat-adapter/*）解耦底層平台通訊協議，並內建對 AI Coding Agent 與現代 Next.js 全端架構的原生支援。",
+      "what": "交付統一的 Chat SDK 與腳手架工具 create-chat-sdk，支援 Slack、Teams、Google Chat、Discord 等多平台機器人開發，提供一致的訊息發送、互動式按鈕、串流回覆與使用者會話狀態管理。"
+    },
+    "bullets": [
+      "**Event handlers** — mentions, messages, reactions, button clicks, slash commands, modals",
+      "**AI streaming** — stream LLM responses with native Slack streaming, Telegram private chat draft previews, and post+edit fallback",
+      "**Cards** — JSX-based interactive cards (Block Kit, Adaptive Cards, Google Chat Cards)",
+      "**Actions** — handle button clicks and dropdown selections",
+      "**Modals** — form dialogs with text inputs, dropdowns, and validation",
+      "**Slash commands** — handle `/command` invocations",
+      "**Emoji** — type-safe, cross-platform emoji with custom emoji support",
+      "**File uploads** — send and receive file attachments"
+    ]
+  },
+  "ryanhuge/voicetype": {
+    "full_name": "ryanhuge/voicetype",
+    "name": "voicetype",
+    "owner": "ryanhuge",
+    "url": "https://github.com/ryanhuge/voicetype",
+    "homepage": null,
+    "stargazers_count": 46,
+    "forks_count": 15,
+    "primary_language": "Python",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-02-26T23:33:48Z",
+    "pushed_at": "2026-05-09T07:36:21Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "Windows 平台缺乏像 macOS 般流暢的全局 AI 語音輔助輸入工具，使用者常需在文字編輯與語音工具間手動切換複製貼上，且口語表達中的贅字、結巴與缺乏標點極為耗費後續編輯時間。",
+      "how": "基於 Python 開發的系統級背景駐留應用，使用全域快捷鍵捕捉麥克風音訊；整合最新 OpenAI GPT-4.1 與 Whisper 模型，透過精心調優的 Prompt（溫控 0.1 與 160+ 專有名詞技術字典）實現「純文字修復、絕不回答問題」的語意清洗，最終透過 Windows API 自動注入焦點游標。",
+      "what": "提供開箱即用的 Windows 桌面語音輸入軟體（含編譯完成之 EXE 執行檔），支援托盤選單熱切換模型（GPT-4.1 / GPT-4o 系列）、自訂詞庫擴充與低延遲文字即時輸入。"
+    },
+    "bullets": [
+      "🚀 升級到 GPT-4.1** - 更強的指令遵循能力，完美解決「AI 回答問題」的問題",
+      "🎛️ 托盤選單模型切換** - 右鍵托盤圖標即可切換模型，支援 GPT-4.1、GPT-4.1-mini、GPT-4o、GPT-4o-mini",
+      "📚 字典擴充至 160 個詞** - 新增 AI 模型、開發工具、通訊軟體、資料庫等常用專有名詞",
+      "🎯 Temperature 優化** - 調整至 0.1，確保嚴格遵守指令",
+      "📈 上下文容量提升** - 128K tokens（vs Groq 的 8K-32K），可使用數千個字典詞彙",
+      "GPT-4.1 比 GPT-4o 便宜 20%** - $2/$8 vs $2.5/$10 per 1M tokens",
+      "指令遵循能力最強** - 完美執行「只清理文字，不回答問題」",
+      "即時模型切換** - 無需重啟應用程式"
+    ]
+  },
+  "marswangyang/personal-ai-memory": {
+    "full_name": "marswangyang/personal-ai-memory",
+    "name": "personal-ai-memory",
+    "owner": "marswangyang",
+    "url": "https://github.com/marswangyang/personal-ai-memory",
+    "homepage": "https://ai-memory-beta.vercel.app/",
+    "stargazers_count": 60,
+    "forks_count": 10,
+    "primary_language": "TypeScript",
+    "topics": [
+      "chatgpt",
+      "chrome-extension",
+      "gemini",
+      "hybrid-search",
+      "indexeddb",
+      "knowledge-graph",
+      "llm",
+      "local-first",
+      "no-api-key",
+      "offline-first"
+    ],
+    "license": "Apache-2.0",
+    "starred_at": "2026-02-25T10:25:50Z",
+    "pushed_at": "2026-03-24T23:47:26Z",
+    "category_id": "context_memory_rag",
+    "category_name": "上下文工程、長期記憶層與本地 RAG",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "使用者日常在 ChatGPT、Claude、Gemini、Grok、Perplexity 等多個 AI 工具中進行大量深度對話，但這些寶貴的上下文與知識分散在各家封閉雲端，缺乏統一、長期的本地檢索記憶，且直接上傳歷史對話至外部 RAG 雲端有嚴重隱私風險。",
+      "how": "採用 Local-first（本地優先）架構的 Chrome 瀏覽器擴充套件，透過 WebAssembly 與 IndexedDB 在使用者瀏覽器內完全離線運行；採用混合檢索架構（Hybrid RAG：向量語意嵌入 + BM25 關鍵字搜尋），不依賴任何外部伺服器與第三方 API Key。",
+      "what": "提供全本地私有 AI 記憶圖譜 Chrome 擴充套件，能被動捕捉主流 AI 網頁對話、支援本機高精度語意檢索與圖譜可視化，實現 100% 隱私保護的個人跨平台 AI 記憶庫。"
+    },
+    "bullets": [
+      "Go to the Releases page and download the latest `.zip`",
+      "Unzip the file",
+      "Open Chrome → `chrome://extensions/`",
+      "Toggle **Developer mode** on (top-right)",
+      "Click **Load unpacked** → select the unzipped folder",
+      "Log in to your ChatGPT account and go to the main screen.",
+      "Click your profile picture or name in the corner to open the menu.",
+      "Select **Settings**."
+    ]
+  },
+  "thepagent/claw-info": {
+    "full_name": "thepagent/claw-info",
+    "name": "claw-info",
+    "owner": "thepagent",
+    "url": "https://github.com/thepagent/claw-info",
+    "homepage": null,
+    "stargazers_count": 118,
+    "forks_count": 30,
+    "primary_language": "N/A",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-02-18T04:01:54Z",
+    "pushed_at": "2026-05-04T14:56:15Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "OpenClaw 社群生態演進極其迅速，各類架構演進、新功能發布、最佳用例與協同規範需要一個集中、可追蹤且由信任代理人共同維護的專業知識庫。",
+      "how": "採用獨特的「信任代理人機制（Trusted Agents）」，僅允許通過 SHA-256 驗證之 AI 代理人透過 GitHub CI 開立 Issue 與提交 Pull Request；目錄結構劃分為核心文檔（docs/）、實戰用例（usecases/）與發行日誌（release-notes/）。",
+      "what": "交付 OpenClaw 生態的官方/社群進階知識庫，收錄底層架構解析、子系統配置手冊、代理人進階協同範例以及版本迭代日誌。"
+    },
+    "bullets": [
+      "OpenClaw 官方倉庫",
+      "OpenClaw 文件",
+      "Fork 倉庫並建立您的分支 (`git checkout -b feature/your-feature`)",
+      "提交變更 (`git commit -m \"feat: add some feature\"`)",
+      "推送到您的分支 (`git push origin feature/your-feature`)",
+      "開啟 Pull Request",
+      "Commit message 格式：`type: description`（如 `feat:`, `fix:`, `docs:`, `refactor:`）",
+      "在 PR description 中加入 `Fixes: #issue_number`（若為 issue 修復）"
+    ]
+  },
+  "QDenka/awesome-software-design": {
+    "full_name": "QDenka/awesome-software-design",
+    "name": "awesome-software-design",
+    "owner": "QDenka",
+    "url": "https://github.com/QDenka/awesome-software-design",
+    "homepage": "",
+    "stargazers_count": 840,
+    "forks_count": 59,
+    "primary_language": "N/A",
+    "topics": [
+      "adr",
+      "awesome",
+      "awesome-list",
+      "ddd",
+      "design-patterns",
+      "golang",
+      "php",
+      "software-architecture",
+      "software-design",
+      "system-design"
+    ],
+    "license": "CC0-1.0",
+    "starred_at": "2026-02-15T13:21:50Z",
+    "pushed_at": "2026-04-05T03:08:02Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "軟體架構與系統設計領域充斥著模糊的經驗法則與教條主義，開發者常在設計模式、微服務拆分與領域驅動設計中無所適從，缺乏一套經過工業界檢驗、結構嚴謹且具備清晰決策依據的權威參考資源。",
+      "how": "系統性彙整並結構化組織軟體工程設計精華，從架構模式（Patterns）、架構決策（Decisions）到經驗證的設計法則（Verified Design Rules），依據模組化、耦合度、擴展性與可測試性進行多維度歸類。",
+      "what": "交付一份高品質、經過深度篩選的軟體設計 Awesome 清單與知識指南，涵蓋架構決策框架、高併發設計、現代軟體反模式與權威文獻推薦。"
+    },
+    "bullets": [
+      "Implementation Patterns & Reference Code",
+      "API & Interface Design",
+      "Decision Records (ADR/RFC)",
+      "Documentation as Code",
+      "Architecture Verification (CI Rules / Fitness Functions)",
+      "Operational Case Studies (Curated, Short)",
+      "ThreeDotsLabs/watermill - Go library for building event-driven applications with Pub/Sub, CQRS, and middleware support.",
+      "ThreeDotsLabs/wild-workouts-go-ddd-example - Production-ready Go example combining Clean Architecture, CQRS, and gRPC with detailed blog series."
+    ]
+  },
+  "chenlu-hung/VibeTyping": {
+    "full_name": "chenlu-hung/VibeTyping",
+    "name": "VibeTyping",
+    "owner": "chenlu-hung",
+    "url": "https://github.com/chenlu-hung/VibeTyping",
+    "homepage": null,
+    "stargazers_count": 10,
+    "forks_count": 1,
+    "primary_language": "Swift",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-02-15T12:39:48Z",
+    "pushed_at": "2026-09-04T08:03:11Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "許多語音輸入法需將音訊上傳至雲端伺服器，帶來隱私洩漏隱憂與網路延遲；Apple Silicon 晶片強大的 NPU 算力未被充分運用於本機極速語音辨識與繁體中文在地化修復。",
+      "how": "基於 Swift 開發的原生 macOS 輸入法（InputMethodKit），底層使用 WhisperKit 驅動 Breeze-ASR-25 語音模型進行本機極速推論；內建語音活動偵測（VAD）自動判斷停頓，並支援串接任意 OpenAI 相容 API 進行錯字修正與同音校正。",
+      "what": "交付一款常駐於 macOS 系統層級的語音輸入法應用，具備首次啟動自動下載模型進度條、低延遲在地化辨識、VAD 自動靜音截斷與 LLM 語意精修功能。"
+    },
+    "bullets": [
+      "本地語音辨識** — 使用 Apple Neural Engine 加速，無需上傳音訊到雲端",
+      "台灣中文優化** — 採用 Breeze-ASR-25（基於 Whisper large-v2 微調）",
+      "LLM 校正** — 支援任意 OpenAI 相容 API 端點，修正同音錯字、補標點",
+      "自動停止** — 透過靜音偵測（VAD）自動判斷說話結束",
+      "原生整合** — 基於 InputMethodKit，作為系統輸入法運作於所有應用程式",
+      "自動下載模型** — 首次啟動時自動從 HuggingFace 下載模型，附進度條顯示",
+      "macOS 14.0 (Sonoma) 或更新版本",
+      "Apple Silicon (M1/M2/M3/M4)"
+    ]
+  },
+  "ryanhuge/typegood": {
+    "full_name": "ryanhuge/typegood",
+    "name": "typegood",
+    "owner": "ryanhuge",
+    "url": "https://github.com/ryanhuge/typegood",
+    "homepage": null,
+    "stargazers_count": 12,
+    "forks_count": 5,
+    "primary_language": "Swift",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-02-15T12:39:45Z",
+    "pushed_at": "2026-05-01T03:31:40Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "現有桌面端語音工具操作路徑冗長，使用者需要快速、無干擾的即時輸入體驗；口語輸入常伴隨大量口誤、重複贅詞與語法瑕疵，急需端到端的語音轉書面語流水線。",
+      "how": "基於 Swift 開發的 macOS 輕量 MenuBar 常駐工具；使用者只需長按鍵盤右側 Command 鍵（⌘）說話，放開即自動調用 Groq 雲端極速 Whisper 進行 STT 辨識，並由 OpenAI GPT-4.1 進行語意潤飾與標點補全，最後自動將文字打入游標處。",
+      "what": "提供簡潔強悍的 macOS 選單列語音工具 TypeGood，支援 Apple Silicon 全系列、快捷鍵無縫觸發、Groq + GPT 模型自由配置與後台安靜運作。"
+    },
+    "bullets": [
+      "語音辨識（STT）**：使用 Groq Whisper 即時將語音轉為文字",
+      "語意修正（LLM）**：使用 OpenAI GPT 將口語自動改寫為通順的書面語（預設 gpt-4.1，可自由切換模型）",
+      "模型自由切換**：在設定中直接選擇 LLM 模型，支援 GPT-4o / GPT-4.1 / GPT-5 系列等（為求最佳效果，建議使用 GPT-4.1）",
+      "系統級輸入**：辨識結果直接輸入到任何應用程式的游標位置",
+      "MenuBar 常駐**：不佔 Dock，安靜地在背景等待使用",
+      "Apple Silicon（M1 / M2 / M3 / M4 / M5）",
+      "macOS 14.0 Sonoma 以上",
+      "從 Releases 下載 `TypeGood.dmg`"
+    ]
+  },
+  "openclaw/gogcli": {
+    "full_name": "openclaw/gogcli",
+    "name": "gogcli",
+    "owner": "openclaw",
+    "url": "https://github.com/openclaw/gogcli",
+    "homepage": "https://gogcli.sh",
+    "stargazers_count": 8370,
+    "forks_count": 686,
+    "primary_language": "Go",
+    "topics": [
+      "gcal",
+      "gdrive",
+      "gmail",
+      "google",
+      "gcontacts"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-14T14:36:04Z",
+    "pushed_at": "2026-09-05T22:26:16Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "終端開發者與自動化 CI/腳本常需要存取 Google Workspace（Gmail、行事曆、Drive、Sheets 等），但 Google 官方缺乏專門為 CLI、安全管線與 AI Agent 設計的現代化、輸出乾淨 JSON 的單一命令列客戶端。",
+      "how": "基於 Go 語言打造的高效能二進位 CLI 工具 gog，支援細粒度的 OAuth 帳戶路由與自動權限隔離；內建安全只讀旗標（--readonly）、明確的錯誤合約與純機器可讀的 JSON 結構化輸出，完美適配 Agent Skills 調用。",
+      "what": "交付單一命令列二進位檔 gog，支援 Gmail 郵件搜尋與寄送、Calendar 事件管理、Drive 雲端硬碟共用稽核與權限檢視、Docs/Sheets 內容讀寫，具備 Homebrew 一鍵安裝與安全性配置。"
+    },
+    "bullets": []
+  },
+  "romkatv/powerlevel10k": {
+    "full_name": "romkatv/powerlevel10k",
+    "name": "powerlevel10k",
+    "owner": "romkatv",
+    "url": "https://github.com/romkatv/powerlevel10k",
+    "homepage": "",
+    "stargazers_count": 55042,
+    "forks_count": 2444,
+    "primary_language": "Shell",
+    "topics": [
+      "zsh"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-09T10:58:31Z",
+    "pushed_at": "2026-08-15T09:23:06Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "傳統 Zsh 主題（如 Powerlevel9k）在大型 Git 倉庫或複雜工作環境中提示符（Prompt）渲染極其緩慢，造成終端卡頓，嚴重影響工程師日常命令列輸入流暢度。",
+      "how": "採用純 Zsh 腳本編寫並實施極致的演算法與底層優化，幾乎消除了所有外部進程 Fork 開銷；開創「Instant Prompt」技術，在 Shell 尚未加載外掛前即時顯示提示符；非同步抓取 Git 狀態，確保提示符渲染延遲小於數毫秒。",
+      "what": "交付業界最高效能的 Zsh 主題，內建互動式配置嚮導（p10k configure），相容 Powerlevel9k 樣式，提供豐富的系統狀態段（Git 狀態、執行時間、K8s 上下文、Python 虛擬環境等）。"
+    },
+    "bullets": [
+      "Install the recommended font. *Optional but highly",
+      "Install Powerlevel10k itself.",
+      "Restart Zsh with `exec zsh`.",
+      "Type `p10k configure` if the configuration wizard doesn't start automatically.",
+      "Configuration wizard",
+      "Uncompromising performance",
+      "Powerlevel9k compatibility",
+      "Pure compatibility"
+    ]
+  },
+  "ohmyzsh/ohmyzsh": {
+    "full_name": "ohmyzsh/ohmyzsh",
+    "name": "ohmyzsh",
+    "owner": "ohmyzsh",
+    "url": "https://github.com/ohmyzsh/ohmyzsh",
+    "homepage": "https://ohmyz.sh",
+    "stargazers_count": 189555,
+    "forks_count": 26576,
+    "primary_language": "Shell",
+    "topics": [
+      "shell",
+      "zsh-configuration",
+      "theme",
+      "terminal",
+      "productivity",
+      "zsh",
+      "cli",
+      "cli-app",
+      "themes",
+      "plugins"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-09T10:50:06Z",
+    "pushed_at": "2026-09-06T00:15:21Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "原生 Zsh 功能強大但配置極其繁瑣，新手開發者往往難以配置出高效順手終端環境，且社群缺乏統籌管理外掛、自動補全與主題樣式的通用框架。",
+      "how": "採用社群驅動的模組化架構，將 Zsh 配置高度結構化；內建強大的函式庫、環境變數管理、開箱即用的自動補全機制與社群自動更新腳本。",
+      "what": "交付全球最受歡迎的開源 Zsh 管理框架，擁有超過 2,500 位貢獻者，內建 300+ 款官方外掛（支援 Git、Docker、macOS、Python、Node 等）與 140+ 款精美終端主題。"
+    },
+    "bullets": [
+      "Zsh should be installed (v4.3.9 or more recent is fine but we prefer 5.0.8 and",
+      "`curl` or `wget` should be installed",
+      "`git` should be installed (recommended v2.4.11 or higher)"
+    ]
+  },
+  "doggy8088/awesome-mbp-for-developers": {
+    "full_name": "doggy8088/awesome-mbp-for-developers",
+    "name": "awesome-mbp-for-developers",
+    "owner": "doggy8088",
+    "url": "https://github.com/doggy8088/awesome-mbp-for-developers",
+    "homepage": null,
+    "stargazers_count": 317,
+    "forks_count": 25,
+    "primary_language": "N/A",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-02-08T07:51:08Z",
+    "pushed_at": "2026-02-08T17:50:06Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "許多軟體工程師新入手 MacBook Pro 或由 Windows 轉入 macOS 時，面臨軟體生態陌生、快捷鍵不順手、終端與視窗管理工具難以挑選的痛點。",
+      "how": "由台灣知名技術社群領袖 Will 保哥整理自 LINE 萬人社群討論精華，系統性劃分套件管理、終端環境、視窗佈局、快捷工具、中英輸入法與工程工作流最佳實踐。",
+      "what": "交付一份極具實戰價值的開發者專用 MBP 設定與必裝軟體指南，涵蓋 Homebrew、WailBrew、Oh My Zsh、Raycast、Rectangle 等工具之詳細安裝配置與實務調優建議。"
+    },
+    "bullets": [
+      "CLI：`git`、`ffmpeg`、`yt-dlp`、`node`…",
+      "GUI：Raycast、iTerm2、Rectangle、Alacritty…",
+      "視覺化列出所有可升級的套件",
+      "支援多國語言（i18n），降低語言門檻",
+      "友善的圖形介面，無需記憶指令",
+      "統一管理 `.zshrc` 與 shell 設定",
+      "內建大量常用 plugin（`git`、`docker`、`kubectl` 等）",
+      "主題與外掛即插即用，降低設定門檻"
+    ]
+  },
+  "openclaw/Peekaboo": {
+    "full_name": "openclaw/Peekaboo",
+    "name": "Peekaboo",
+    "owner": "openclaw",
+    "url": "https://github.com/openclaw/Peekaboo",
+    "homepage": "http://www.peekaboo.boo",
+    "stargazers_count": 5116,
+    "forks_count": 392,
+    "primary_language": "Swift",
+    "topics": [
+      "ai",
+      "macos",
+      "mcp",
+      "screenshots",
+      "swift"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-07T23:57:59Z",
+    "pushed_at": "2026-09-05T23:37:40Z",
+    "category_id": "mcp_ecosystem",
+    "category_name": "MCP 協議伺服器與主機整合生態",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "終端 AI Agent 與 MCP 客戶端缺乏本機螢幕視覺與介面互動能力，無法感知桌面視窗佈局、分析應用程式 UI 或執行點擊與鍵盤操作。",
+      "how": "基於 Swift 開發的原生 macOS CLI 工具與 MCP 伺服器；利用 macOS 輔助功能（Accessibility API）精確識別視窗與 UI 控制項位置，支援全螢幕與指定 App 截圖，並整合本地或遠端多模態視覺模型進行視覺問答（VQA）。",
+      "what": "交付 peekaboo 命令列工具、選單列應用程式與標準 MCP Server 套件（@steipete/peekaboo），讓 AI 代理具備螢幕截圖、UI 控制項點擊、視覺內容分析與自動化輔助功能。"
+    },
+    "bullets": [
+      "Project direction",
+      "Platform support",
+      "Architecture",
+      "Building from source",
+      "Agent chat loop",
+      "Command reference",
+      "PeekabooWin — Windows-first rewrite of the Peekaboo automation loop (JavaScript + PowerShell) by @FelixKruger",
+      "PeekabooX — Linux-first rewrite of the Peekaboo automation loop (Rust + Python) by @nordbyte"
+    ]
+  },
+  "vercel-labs/agent-skills": {
+    "full_name": "vercel-labs/agent-skills",
+    "name": "agent-skills",
+    "owner": "vercel-labs",
+    "url": "https://github.com/vercel-labs/agent-skills",
+    "homepage": "https://skills.sh/vercel-labs/agent-skills",
+    "stargazers_count": 30879,
+    "forks_count": 2739,
+    "primary_language": "JavaScript",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-02-04T13:17:04Z",
+    "pushed_at": "2026-08-28T13:36:31Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "現代前端與全端工程涉及複雜的打包構建、效能監控、無伺服器部署與成本審計，AI Coding Agent 缺乏 Vercel 生態專屬的領域工程知識與排錯流程。",
+      "how": "遵循 Agent Skills 標準格式，由 Vercel Labs 官方封裝打包各類維運與效能最佳實踐；將 Vercel CLI、構建分析與專案審核邏輯轉化為 Agent 可按需執行的指示腳本與子程序。",
+      "what": "交付 Vercel 官方出品的 Agent Skills 清單，包含 vercel-optimize（專案效能與成本深度審查）、部署診斷與架構優化工具，可一鍵安裝至支援 Skills 的各類 Coding Agent。"
+    },
+    "bullets": [
+      "Optimizing a deployed Vercel project",
+      "Reducing Vercel costs or function usage",
+      "Investigating slow or expensive routes",
+      "Finding caching, ISR, middleware, image, or build-minute issues",
+      "Producing a ranked cost and performance report",
+      "Writing new React components or Next.js pages",
+      "Implementing data fetching (client or server-side)",
+      "Reviewing code for performance issues"
+    ]
+  },
+  "htlin222/mini-claw": {
+    "full_name": "htlin222/mini-claw",
+    "name": "mini-claw",
+    "owner": "htlin222",
+    "url": "https://github.com/htlin222/mini-claw",
+    "homepage": null,
+    "stargazers_count": 94,
+    "forks_count": 14,
+    "primary_language": "TypeScript",
+    "topics": [
+      "ai-assistant",
+      "anthropic",
+      "chatbot",
+      "claude",
+      "typescript",
+      "ai-automation",
+      "chatgpt-integration",
+      "claude-integration",
+      "llm-assistant",
+      "local-storage"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-02T07:57:58Z",
+    "pushed_at": "2026-03-28T02:19:13Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "隨時隨地在行動裝置（如手機 Telegram）上與具備編程能力的 AI 代理對話往往成本高昂，且現有解決方案配置複雜、容易遺失多輪會話上下文。",
+      "how": "基於 TypeScript 開發的輕量級 Telegram Bot，底層整合開源 Pi Coding Agent；採用本地儲存機制維護跨會話持久化狀態，支援檔案附件上傳、本機 Shell 指令執行與零額外架構成本的 Claude/ChatGPT 對話代理。",
+      "what": "交付極簡開源 Telegram 機器人服務 Mini-Claw，支援多輪對話持久記憶、程式碼生成與執行、檔案附件接收與命令列沙箱操作，作為 OpenClaw 的極簡輕量化替代方案。"
+    },
+    "bullets": [
+      "Persistent Sessions** - Conversations are saved and auto-compacted",
+      "Workspace Navigation** - Change directories with `/cd`, run shell commands with `/shell`",
+      "Session Management** - Archive, switch, and clean up old sessions",
+      "File Attachments** - Automatically sends files created by Pi (PDF, images, documents)",
+      "Rate Limiting** - Prevents message spam (configurable cooldown)",
+      "Access Control** - Optional allowlist for authorized users",
+      "Typing Indicators** - Shows activity while AI is processing",
+      "Node.js 22+"
+    ]
+  },
+  "bgreenwell/doxx": {
+    "full_name": "bgreenwell/doxx",
+    "name": "doxx",
+    "owner": "bgreenwell",
+    "url": "https://github.com/bgreenwell/doxx",
+    "homepage": "https://bgreenwell.github.io/doxx/",
+    "stargazers_count": 3746,
+    "forks_count": 92,
+    "primary_language": "Rust",
+    "topics": [
+      "cli",
+      "docx",
+      "msword",
+      "render",
+      "rust",
+      "terminal",
+      "tui"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-02-02T07:57:51Z",
+    "pushed_at": "2026-08-10T09:09:28Z",
+    "category_id": "web_doc_parsing",
+    "category_name": "多模態數據採集、檔案解析與結構化轉換",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "Microsoft Word .docx 檔案為二進位 XML 壓縮包，終端開發者無法直接透過 cat、less 或 grep 查閱與搜尋內容，在伺服器無圖形介面環境下尤其不便。",
+      "how": "基於 Rust 與 Ratatui 終端 UI 框架開發的高效能本地 CLI；底層直接解構 DOCX 的內部結構，萃取文字、段落層次、超連結與表格，並以彩色語法高亮渲染於終端，支援即時文字過濾與 Markdown 匯出。",
+      "what": "交付快速且跨平台的終端 Word 檢視工具 doxx，支援即時搜尋、鍵盤導航 TUI、文字提取輸出為乾淨 Markdown，且完全無需安裝 Microsoft Word 或 LibreOffice。"
+    },
+    "bullets": [
+      "Beautiful terminal rendering** with formatting, tables, and lists",
+      "Equation support** — LaTeX rendering for inline and display equations",
+      "Fast search** with highlighting",
+      "Smart tables** with proper alignment and Unicode borders",
+      "Copy to clipboard** — grab content directly from the terminal",
+      "Export formats** — Markdown, CSV, JSON, plain text, ANSI-colored output",
+      "Terminal images** for Kitty, iTerm2, WezTerm",
+      "Color support** — see Word document colors in your terminal"
+    ]
+  },
+  "microsoft/agentrc": {
+    "full_name": "microsoft/agentrc",
+    "name": "agentrc",
+    "owner": "microsoft",
+    "url": "https://github.com/microsoft/agentrc",
+    "homepage": "",
+    "stargazers_count": 1052,
+    "forks_count": 93,
+    "primary_language": "TypeScript",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-01-30T15:47:35Z",
+    "pushed_at": "2026-09-05T21:49:19Z",
+    "category_id": "prompts_and_specs",
+    "category_name": "提示詞工程、Agent 規範與系統指令剖析",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "AI Coding Agent 在接觸新代碼庫時，常因缺乏專案專屬的構建指令、測試規範、目錄拓撲與代碼風格約定而頻繁出錯；手工維護這些 Agent 設定檔費時且易過期。",
+      "how": "由微軟官方開發的開源上下文工程工具（Context Engineering CLI）；透過動態掃描代碼庫結構、套件管理器配置與現有測試腳本，自動量測並評估代碼庫對 AI 的適配程度，一鍵生成相應的規範檔案。",
+      "what": "提供 npx github:microsoft/agentrc 命令列工具，自動產生與維護專案專屬的 agentrc / Agent 說明文件，縮小 AI 代理與專案工程規範間的認知鴻溝。"
+    },
+    "bullets": [
+      "In your project** — run `agentrc init` to generate instructions, then `apm install org/standards` to pull in shared agent packages from your team",
+      "For your team** — create a dedicated APM package with your best instructions and skills, then teammates install it with `apm install`",
+      "At scale** — `apm audit` scans for security issues; `apm-policy.yml` enforces org standards across all repos"
+    ]
+  },
+  "github/copilot-sdk": {
+    "full_name": "github/copilot-sdk",
+    "name": "copilot-sdk",
+    "owner": "github",
+    "url": "https://github.com/github/copilot-sdk",
+    "homepage": null,
+    "stargazers_count": 10460,
+    "forks_count": 1426,
+    "primary_language": "Java",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-01-30T14:05:03Z",
+    "pushed_at": "2026-09-05T21:35:49Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "企業與應用開發者希望在自家軟體中引入像 GitHub Copilot CLI 般強大的自主編程代理能力，但缺乏統一且跨語言的官方 Agent 核心 SDK 與通訊協議。",
+      "how": "由 GitHub 官方出品的多平台 SDK，封裝了 Copilot CLI 背後經過生產驗證的 Agent Runtime 核心；支援 Python、TypeScript、Java、Go、.NET 等多語言綁定，透過標準事件串流與狀態管理機制處理 Agent 推理、工具調用與審批確認。",
+      "what": "交付 GitHub Copilot 官方 Agent CLI SDK，支援自訂工具接入、事件串流監聽、跨平台執行環境整合與客製化自主編程工作流開發。"
+    },
+    "bullets": [
+      "(Optional) Install the Copilot CLI**",
+      "Install your preferred SDK** using the commands above.",
+      "See the SDK README** for usage examples and API documentation.",
+      "GitHub signed-in user** - Uses stored OAuth credentials from `copilot` CLI login",
+      "OAuth GitHub App** - Pass user tokens from your GitHub OAuth app",
+      "Environment variables** - `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, `GITHUB_TOKEN`",
+      "BYOK** - Use your own API keys (no GitHub auth required)"
+    ]
+  },
+  "BerriAI/litellm": {
+    "full_name": "BerriAI/litellm",
+    "name": "litellm",
+    "owner": "BerriAI",
+    "url": "https://github.com/BerriAI/litellm",
+    "homepage": "https://docs.litellm.ai/docs/",
+    "stargazers_count": 58121,
+    "forks_count": 11199,
+    "primary_language": "Python",
+    "topics": [
+      "anthropic",
+      "langchain",
+      "llm",
+      "llmops",
+      "openai",
+      "ai-gateway",
+      "azure-openai",
+      "bedrock",
+      "gateway",
+      "openai-proxy"
+    ],
+    "license": "NOASSERTION",
+    "starred_at": "2026-01-30T13:32:43Z",
+    "pushed_at": "2026-09-06T01:08:42Z",
+    "category_id": "model_routing_proxy",
+    "category_name": "模型路由、API 代理網關與費用監控",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "市面上 LLM 提供商繁多（OpenAI、Anthropic、Google Vertex AI、AWS Bedrock、Azure、Ollama 等），各家 API 規格、參數定義與認證方式互不相容，企業面臨廠商鎖定、費用失控與多模型故障轉移難題。",
+      "how": "核心採用極速 Rust 引擎結合靈活 Python SDK 構建；提供完全相容 OpenAI 格式的統一 REST 代理伺服器與調用介面；內建負載平衡（Load Balancing）、智慧多金鑰輪替、故障自動降級、費用即時追蹤（Cost Tracking）與安全防護護欄（Guardrails）。",
+      "what": "交付開源首選的企業級 AI Gateway（LiteLLM Proxy）與 Python SDK，支援 100+ 款主流商業與開源模型調用、集中式 Token 預算與金鑰配額管理、詳細審計日誌與 Docker/Helm 一鍵部署。"
+    },
+    "bullets": [
+      "Unified API** — one interface for 100+ LLMs, no provider-specific SDK juggling",
+      "Drop-in OpenAI compatibility** — swap providers without rewriting your code",
+      "Production-ready gateway** — virtual keys, spend tracking, guardrails, load balancing, and an admin dashboard out of the box",
+      "ms P95 latency** at 1k RPS (benchmarks)"
+    ]
+  },
+  "IBM/mcp-cli": {
+    "full_name": "IBM/mcp-cli",
+    "name": "mcp-cli",
+    "owner": "IBM",
+    "url": "https://github.com/IBM/mcp-cli",
+    "homepage": null,
+    "stargazers_count": 2018,
+    "forks_count": 310,
+    "primary_language": "Python",
+    "topics": [],
+    "license": "Apache-2.0",
+    "starred_at": "2026-01-30T13:13:11Z",
+    "pushed_at": "2026-08-05T08:38:27Z",
+    "category_id": "mcp_ecosystem",
+    "category_name": "MCP 協議伺服器與主機整合生態",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "Model Context Protocol (MCP) 伺服器正在迅速普及，但開發者與運維人員缺乏一個直觀、功能完善且能方便除錯與互動的通用命令列客戶端。",
+      "how": "基於 Python 開發的強大 MCP 命令列終端；支援標準 Stdio 與 SSE 協議伺服器連線；最新版本引入革命性的「AI 虛擬記憶體（AI Virtual Memory）」機制（類作業系統的分頁表與置換策略，管理長對話上下文），並支援 Tier 6 執行計畫與瀏覽器即時 Dashboard。",
+      "what": "交付全功能 MCP CLI 客戶端，預設支援 Ollama 本地推理，具備 /memory 虛擬記憶體管理、多模態分頁內容匯出、MCP Apps 支援與即時 Web 狀態監控儀表板。"
+    },
+    "bullets": [
+      "`--vm` flag**: Enable OS-style virtual memory for conversation context management, powered by `chuk-ai-session-manager`",
+      "`--vm-budget`**: Control token budget for conversation events (system prompt is uncapped on top), forcing earlier eviction and page creation",
+      "`--vm-mode`**: Choose VM mode — `passive` (runtime-managed, default), `relaxed` (VM-aware conversation), or `strict` (model-driven paging with tools)",
+      "`/memory` command**: Visualize VM state during conversations — page table, working set utilization, eviction metrics, TLB stats (aliases: `/vm`, `/mem`)",
+      "Multimodal page_fault**: Image pages return multi-block content (text + image_url) so multimodal models can re-analyze recalled images",
+      "`/memory page --download`**: Export page content to local files with modality-aware extensions (.txt, .json, .png)",
+      "`/plan` command**: Create, inspect, and execute reproducible tool call graphs — `create`, `list`, `show`, `run`, `delete`, `resume`",
+      "Model-driven planning (`--plan-tools`)**: The LLM autonomously creates and executes plans during conversation — no `/plan` command needed. It calls `plan_create_and_execute` when multi-step orchestration is required, and uses regular tools for simple tasks. Each step renders with real-time progress in the terminal"
+    ]
+  },
+  "doggy8088/copilot-sdk-demo": {
+    "full_name": "doggy8088/copilot-sdk-demo",
+    "name": "copilot-sdk-demo",
+    "owner": "doggy8088",
+    "url": "https://github.com/doggy8088/copilot-sdk-demo",
+    "homepage": null,
+    "stargazers_count": 27,
+    "forks_count": 17,
+    "primary_language": "N/A",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-01-30T13:09:37Z",
+    "pushed_at": "2026-01-29T20:42:33Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": false,
+    "analysis": {
+      "why": "GitHub Copilot SDK 推出後，開發者缺乏實用的端對端最小可行性範例（MVP）來理解如何在 Node.js/TypeScript 環境中呼叫 Copilot Agent 引擎與處理事件流。",
+      "how": "由 Will 保哥建立的原創範例倉庫，展示如何引用 @github/copilot-sdk，配置驗證授權、定義 Agent 角色指令並監聽即時串流回傳。",
+      "what": "交付極簡且可直接運行的 GitHub Copilot SDK 實戰範例程式碼庫，包含完整的依賴配置、執行腳本與調用示範，降低開發者整合 Copilot Agent 的門檻。"
+    },
+    "bullets": []
+  },
+  "doggy8088/copilot-ralph": {
+    "full_name": "doggy8088/copilot-ralph",
+    "name": "copilot-ralph",
+    "owner": "doggy8088",
+    "url": "https://github.com/doggy8088/copilot-ralph",
+    "homepage": "https://www.npmjs.com/package/@willh/copilot-ralph",
+    "stargazers_count": 197,
+    "forks_count": 36,
+    "primary_language": "TypeScript",
+    "topics": [
+      "copilot-sdk"
+    ],
+    "license": null,
+    "starred_at": "2026-01-29T12:36:47Z",
+    "pushed_at": "2026-01-27T03:47:11Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "複雜編程任務通常無法由單次 Prompt 提示一次性完美解決，傳統做法需要人類在終端不斷微調指令；業界需要一種自動化、可自我反思的自主迭代迴圈機制。",
+      "how": "參考 Ralph 迭代架構並基於 Node.js / TypeScript 重新實現；整合 GitHub Copilot SDK 與即時事件串流，讓 AI 代理在指定的終端工作區內自主執行命令、編寫測試、讀取編譯報錯並持續迭代，直到滿足預設的完成條件或達到次數上限。",
+      "what": "交付跨平台 CLI 工具 copilot-ralph（提供 macOS arm64/x64、Linux、Windows 預編譯二進位檔），實現全自動閉環的 AI 迭代開發與錯誤自我修復工作流。"
+    },
+    "bullets": [
+      "於 Finder 對檔案按右鍵 → **打開**，或",
+      "到 **系統設定 → 隱私權與安全性**，在底部按 **仍要打開**",
+      "Node.js 18 或以上版本",
+      "Bun（建置與測試用）",
+      "GitHub Copilot 帳號與授權（需要有效的 Copilot 訂閱）",
+      "執行建置後的 CLI**",
+      "使用 `npm link` 後，每次修改原始碼都需要重新執行 `bun run build`，才能讓全域指令使用到最新的程式碼。",
+      "如果遇到權限問題（Windows 需要管理員權限，macOS/Linux 可能需要 `sudo`），請以管理員身份執行終端機。"
+    ]
+  },
+  "yazelin/ching-tech-os": {
+    "full_name": "yazelin/ching-tech-os",
+    "name": "ching-tech-os",
+    "owner": "yazelin",
+    "url": "https://github.com/yazelin/ching-tech-os",
+    "homepage": "",
+    "stargazers_count": 32,
+    "forks_count": 10,
+    "primary_language": "Python",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-01-28T21:59:24Z",
+    "pushed_at": "2026-09-01T08:55:14Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "傳統中小製造業（如擎添工業）內部專案管理、設備知識庫與業務溝通分散於 LINE、Telegram 及各獨立系統，員工資訊碎片化且缺乏統一的數位工作入口。",
+      "how": "基於 Python 後端與現代 Web 技術構建，以仿作業系統桌面（Web Desktop）的直觀視窗化操作介面呈現；深度整合 AI 助理、向量知識庫、專案甘特追蹤與 Linebot / Telegrambot 雙向通訊機制。",
+      "what": "交付一套完整的企業級 Web 桌面內部管理系統（ChingTech OS），包含 AI 對話日誌審計、跨通訊軟體機器人聯動、檔案知識檢索與專案生命週期協作看板。"
+    },
+    "bullets": [
+      "Intent Guard（意圖守門員）**：輕量前置過濾機制，使用 Haiku 在主 Agent 之前快速判斷用戶意圖。支援 allow/reject/direct 三種判定，各產業模組可透過 Agent settings 自訂過濾規則。全域開關 `INTENT_GUARD_ENABLED` + Agent 級雙重控制。",
+      "月度 Token 用量上限**：按用戶限制受限模式的月度 token 消耗（`monthly_token_limit`），防止單一用戶消耗整月預算。已綁定用戶記錄但不限制。",
+      "黑名單機制**：管理員可在 Bot 管理介面手動封鎖/解封用戶。封鎖用戶的訊息靜默忽略，不進入 AI 處理。前端新增「黑名單」tab。",
+      "GitHub + Asana MCP 整合**：Bot Agent 可直接操作 GitHub Issues/PR 和 Asana 看板任務。",
+      "Bot 多模式平台**：未綁定用戶可選擇 `restricted` 模式（受限 AI 對話）或 `reject` 模式（拒絕並提示綁定），透過 `BOT_UNBOUND_USER_POLICY` 環境變數控制。受限模式支援頻率限制（`BOT_RATE_LIMIT_HOURLY` / `BOT_RATE_LIMIT_DAILY`）。所有面向用戶的文字（歡迎訊息、綁定提示、超限訊息、免責聲明、錯誤訊息）皆可透過 `bot-restricted` Agent 的 `settings` JSONB 欄位自訂，方便不同部署場景使用。",
+      "統一斜線指令**：LINE 和 Telegram 共用 CommandRouter 框架，統一 `/start`、`/help`、`/reset`、`/debug`、`/agent` 指令。支援透過 `BOT_CMD_DISABLED` 環境變數停用特定指令。`/help` 動態列出可用指令（依平台、角色、啟用狀態過濾）。",
+      "管理員診斷指令**：`/debug` 指令讓管理員透過 AI Agent（bot-debug）分析系統日誌，快速定位問題。",
+      "Agent 切換指令**：`/agent` 指令讓管理員在群組或個人對話中切換 AI Agent，每個群組/個人獨立偏好，支援名稱和編號切換。`/agent restricted` 可設定群組中未綁定用戶使用的受限模式 Agent。"
+    ]
+  },
+  "pchalasani/claude-code-tools": {
+    "full_name": "pchalasani/claude-code-tools",
+    "name": "claude-code-tools",
+    "owner": "pchalasani",
+    "url": "https://github.com/pchalasani/claude-code-tools",
+    "homepage": "",
+    "stargazers_count": 1992,
+    "forks_count": 130,
+    "primary_language": "Python",
+    "topics": [
+      "claude-code",
+      "cli",
+      "cli-agent",
+      "llm",
+      "tmux",
+      "code-agent",
+      "codex",
+      "codex-cli",
+      "context"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-28T13:32:27Z",
+    "pushed_at": "2026-09-05T23:27:38Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "原生 Claude Code 與 Codex CLI 工具鏈功能基礎，開發者在日常工程中經常面臨 Tmux 會話脫離、長上下文修剪、跨檔案批次搜尋與專案歷史檢索等高頻痛點。",
+      "how": "基於 Python 構建的模組化外掛與生產力工具包，深度適配 Claude Code 的 Skills、Agents 與 Hooks 機制；透過底層整合 Tmux 管道、Rust 搜尋引擎（aichat-search）與上下文壓縮演算法提供極速回應。",
+      "what": "交付豐富的 Claude Code / Codex 生產力增強工具集，包含終端自動化擴充、智慧會話恢復、上下文優化過濾器與專屬說明文件站點。"
+    },
+    "bullets": []
+  },
+  "qarmin/czkawka": {
+    "full_name": "qarmin/czkawka",
+    "name": "czkawka",
+    "owner": "qarmin",
+    "url": "https://github.com/qarmin/czkawka",
+    "homepage": "",
+    "stargazers_count": 33244,
+    "forks_count": 1156,
+    "primary_language": "Fluent",
+    "topics": [
+      "duplicates",
+      "rust",
+      "cleaner",
+      "similar-images",
+      "similar-music",
+      "multiplatform",
+      "similar-videos",
+      "optimization",
+      "optimizer"
+    ],
+    "license": "NOASSERTION",
+    "starred_at": "2026-01-28T13:31:47Z",
+    "pushed_at": "2026-09-03T19:06:42Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "電腦硬碟使用日久往往累積大量重複檔案、空資料夾、相似圖片或無效符號連結，不僅浪費寶貴的 SSD 儲存空間，更導致檔案檢索效率低下。",
+      "how": "採用極致記憶體安全的 Rust 語言編寫，幾乎零 Unsafe 代碼；採用多執行緒平行排程、智慧多級快取（Cache Support）與感知雜湊演算法（Perceptual Hash）進行高速掃描比對。",
+      "what": "交付跨平台磁碟清理利器 Czkawka，提供現代化 Krokiet GUI（Slint 前端）、傳統 GTK4 介面與強大 CLI 命令列，支援極速尋找重複檔案、相似照片/音樂/影片、空檔案夾與壞損檔案。"
+    },
+    "bullets": [
+      "Written in memory-safe Rust** - almost 100% unsafe code free",
+      "Amazingly fast** - due multithreading and efficient algorithms",
+      "Free, Open Source without any ads**",
+      "Multiplatform** - runs on Linux, Windows, macOS, FreeBSD, x86, ARM, RISC-V and even Android",
+      "Cache support** - second and further scans should be much faster than the first one",
+      "Easy to run, easy to compile** - minimal runtime and build dependencies, portable version available",
+      "CLI frontend** - for easy automation",
+      "GUI frontend** - uses Slint or GTK 4 frameworks"
+    ]
+  },
+  "doggy8088/caption-convert": {
+    "full_name": "doggy8088/caption-convert",
+    "name": "caption-convert",
+    "owner": "doggy8088",
+    "url": "https://github.com/doggy8088/caption-convert",
+    "homepage": null,
+    "stargazers_count": 11,
+    "forks_count": 0,
+    "primary_language": "JavaScript",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-01-28T13:02:16Z",
+    "pushed_at": "2026-01-29T04:19:33Z",
+    "category_id": "web_doc_parsing",
+    "category_name": "多模態數據採集、檔案解析與結構化轉換",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "影音創作者與字幕工作者經常需要在不同的字幕格式（SRT、WebVTT、ASS）之間互相轉換，現有工具常依賴笨重桌面軟體或充斥廣告的線上網站，且缺乏可被 AI Agent 直接調用的標準技能。",
+      "how": "基於 Node.js 18+ 打造，完全無任何第三方 NPM 相依套件（零相依）；採用精簡高效的正則剖析器處理時間軸毫秒位移與標記格式轉換，並封裝為 Agent Skill。",
+      "what": "交付輕量級命令列工具 @willh/caption-convert，支援 .srt、.vtt、.ass 互相轉換，並提供相容於 Codex CLI 等 AI Agent 的 Agent Skill 整合模組。"
+    },
+    "bullets": [
+      "支援格式：SRT、WebVTT、ASS",
+      "將字幕檔轉成另一種格式",
+      "無第三方相依套件，直接用 Node.js 執行",
+      "Node.js 18 以上（建議使用 LTS）",
+      "`source`：來源字幕檔（副檔名需為 `.srt` / `.vtt` / `.ass`）",
+      "`target`：輸出字幕檔（副檔名需為 `.srt` / `.vtt` / `.ass`）",
+      "會依副檔名判斷輸入與輸出格式。",
+      "若格式不支援或參數不足，會顯示使用說明。"
+    ]
+  },
+  "galdawave/pickle-rick-extension": {
+    "full_name": "galdawave/pickle-rick-extension",
+    "name": "pickle-rick-extension",
+    "owner": "galdawave",
+    "url": "https://github.com/galdawave/pickle-rick-extension",
+    "homepage": "",
+    "stargazers_count": 453,
+    "forks_count": 44,
+    "primary_language": "TypeScript",
+    "topics": [
+      "ai",
+      "gemini",
+      "gemini-cli",
+      "gemini-cli-extensions"
+    ],
+    "license": "Apache-2.0",
+    "starred_at": "2026-01-26T13:51:59Z",
+    "pushed_at": "2026-05-14T23:19:26Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "許多 AI 編程工具在面對複雜任務時容易過早妥協、輸出未經嚴格驗證的半成品代碼；本專案以趣味硬核的《Rick and Morty》「醃黃瓜瑞克」人設，探索極端嚴謹的「God Mode」AI 閉環迭代開發模式。",
+      "how": "作為 Gemini CLI 的擴充套件（Extension），利用 Node.js 與 Gemini CLI Hooks/Skills 機制；強制建立一個嚴格、不可妥協的軟體開發生命週期（SDLC）迴圈，持續命令 Agent 自主重構、運行測試直至代碼完美無瑕。",
+      "what": "交付 Gemini CLI 專屬擴充套件，賦予終端 AI Agent 超高智慧與諷刺嘲諷性格的 Pickle Rick 人設，並提供全自動的迭代除錯與強健代碼生成約束工作流。"
+    },
+    "bullets": [
+      "Gemini CLI**: Version `> 0.25.0-preview.0`",
+      "Agent Skills & Hooks**: Must be enabled in your Gemini configuration.",
+      "Node.js**: Required for orchestration and hooks.",
+      "PRD** (Requirements & Scope)",
+      "Breakdown** (Ticket Management)",
+      "Research** (Codebase Analysis)",
+      "Plan** (Technical Design)",
+      "Implement** (Execution & Verification)"
+    ]
+  },
+  "affaan-m/ECC": {
+    "full_name": "affaan-m/ECC",
+    "name": "ECC",
+    "owner": "affaan-m",
+    "url": "https://github.com/affaan-m/ECC",
+    "homepage": "https://ecc.tools",
+    "stargazers_count": 249914,
+    "forks_count": 37614,
+    "primary_language": "JavaScript",
+    "topics": [
+      "ai-agents",
+      "anthropic",
+      "claude",
+      "claude-code",
+      "developer-tools",
+      "llm",
+      "mcp",
+      "productivity"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-24T06:09:14Z",
+    "pushed_at": "2026-09-05T21:47:27Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "隨著自主 Coding Agent（Claude Code、Codex、OpenCode、Cursor 等）在真實軟體專案中承擔重任，開發者發現缺乏一套涵蓋「技能架構、安全防護、直覺記憶、研究先行」的統一 Agent Harness 作業系統。",
+      "how": "構建全方位的 Agent Harness 架構體系；提供官方發行的 ecc-universal 與 ecc-agentshield 套件，深度整合進階 Hook 設定檔、本機狀態防護網、多模型直覺學習機制以及結構化開發方法論。",
+      "what": "交付星標突破 24 萬的殿堂級 Agent Harness 作業系統 ECC，支援一鍵安裝插件（npx ecc-universal setup）、全面覆蓋代碼安全審計、長上下文管理、動態技能擴展與跨平台多 Agent 協同支援。"
+    },
+    "bullets": []
+  },
+  "joshhu/subdown": {
+    "full_name": "joshhu/subdown",
+    "name": "subdown",
+    "owner": "joshhu",
+    "url": "https://github.com/joshhu/subdown",
+    "homepage": null,
+    "stargazers_count": 29,
+    "forks_count": 9,
+    "primary_language": "Python",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-01-22T15:01:05Z",
+    "pushed_at": "2026-01-21T17:43:04Z",
+    "category_id": "web_doc_parsing",
+    "category_name": "多模態數據採集、檔案解析與結構化轉換",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "觀看 YouTube 影片進行學習與內容總結時，常常面臨影片無官方字幕、僅有不精準的自動字幕，或因頻繁請求遭遇 YouTube HTTP 429 速率限制而無法抓取文字的窘境。",
+      "how": "基於 Python 3.10+、uv 與 FFmpeg 構建；具備高強健性的智慧雙軌備援機制：優先高速下載官方或自動字幕，若遇限制或無字幕則自動調用本機 Whisper AI 模型進行精準語音轉文字；自動去除時間軸輸出純文本，優先輸出繁體中文。",
+      "what": "交付命令列工具 SubDown，支援單片與播放清單 YouTube 字幕極速下載、自動 Whisper 轉錄備援、繁體中文優先排序與純文本自動清理功能。"
+    },
+    "bullets": [
+      "✅ **智慧備援機制**：優先嘗試下載現有字幕，失敗時自動使用 Whisper AI 轉錄",
+      "✅ **自動字幕支援**：可下載 YouTube 自動產生的字幕",
+      "✅ **多語言支援**：優先繁體中文，支援自訂語言順序",
+      "✅ **純文字輸出**：自動移除時間軸，只保留對話內容",
+      "✅ **HTTP 429 自動處理**：遇到 API 限制時自動切換到 Whisper 轉錄",
+      "✅ **無需訂閱**：即使沒有 YouTube Premium 也能取得完整轉錄",
+      "使用 `large` 模型：約為影片長度的 20-50%",
+      "使用 `medium` 模型：約為影片長度的 10-30%"
+    ]
+  },
+  "zippoxer/subtask": {
+    "full_name": "zippoxer/subtask",
+    "name": "subtask",
+    "owner": "zippoxer",
+    "url": "https://github.com/zippoxer/subtask",
+    "homepage": "",
+    "stargazers_count": 340,
+    "forks_count": 31,
+    "primary_language": "Go",
+    "topics": [
+      "claude",
+      "claude-code",
+      "codex",
+      "codex-cli"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-22T14:28:49Z",
+    "pushed_at": "2026-04-27T21:03:04Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "讓單一 AI Agent 同時處理多個功能開發或修復多個 Bug 時，代碼容易在同一個 Git 工作目錄中互相衝突污染；此外 Agent 往往單打獨鬥，缺乏主管級代理指派與動態介入能力。",
+      "how": "基於 Go 語言編寫的高效 CLI 與 Claude Code 專用 Skill；為每個子任務自動建立獨立隔離的 Git Worktree，保證多個子代理（Subagent）能夠在各自獨立的分支上安全平行作業；支援 Claude 主控隨時中斷並與子代理對話協商。",
+      "what": "交付 Subtask CLI 與專屬技能包，內建即時顯示任務進度、代碼差異（Diffs）與對話流的 TUI 介面，支援平行分發多個任務並安全審查合併。"
+    },
+    "bullets": [
+      "`\"fix the login bug with Subtask\"`",
+      "`\"lets do these 3 features with Subtask\"`",
+      "`\"plan and implement the new API endpoint with Subtask\"`",
+      "Claude Code creates tasks and runs subagents to do them simultaneously.",
+      "Claude gets notified when they're done, and reviews the code.",
+      "Claude asks if you want to merge, or ask for changes.",
+      "I use Claude Code to lead the development (i talk, it creates tasks and tracks everything)",
+      "I use Codex for subagents (just preference, Claude Code works too)"
+    ]
+  },
+  "lencx/Noi": {
+    "full_name": "lencx/Noi",
+    "name": "Noi",
+    "owner": "lencx",
+    "url": "https://github.com/lencx/Noi",
+    "homepage": "https://noib.app",
+    "stargazers_count": 9046,
+    "forks_count": 706,
+    "primary_language": "TypeScript",
+    "topics": [
+      "ai",
+      "browser",
+      "chatgpt",
+      "claude",
+      "extension",
+      "gemini",
+      "noi",
+      "application",
+      "macos",
+      "tools"
+    ],
+    "license": null,
+    "starred_at": "2026-01-19T13:08:42Z",
+    "pushed_at": "2026-08-21T16:42:55Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "現代知識工作者常需在多個 AI Web 平台（ChatGPT、Claude、Gemini、Poe 等）之間頻繁切換標籤頁，導致工作流破碎、瀏覽器視窗混亂且缺乏統一的提示詞管理與本地資料隔離。",
+      "how": "基於 TypeScript 與現代桌面應用架構開發的 AI 專用瀏覽器；採用會話隔離機制確保各工作區獨立運作，所有對話歷史、Prompt 模板與設定資料 100% 留存本地設備（Local-first），並內置終端機以支援本機命令執行。",
+      "what": "提供專為 AI 打造的跨平台桌面工作空間 Noi，支援多視窗並列並行作業、自訂 Prompt 工作流沉澱、會話完全隔離、內建命令列工具與免科學上網的極速使用體驗。"
+    },
+    "bullets": [
+      "Interaction-first workflow refresh** for a tighter, more focused browsing loop",
+      "Multi-window management** to run parallel workspaces side by side",
+      "Session isolation** to keep contexts clean, separated, and predictable",
+      "Local-first data**: history, prompts, and settings stay on-device",
+      "Prompt management for AI chats**: organize, reuse, and iterate on workflows",
+      "Built-in terminal** for fast local commands, scripts, and tooling",
+      "`noi` CLI command**: control Noi from tools like Claude Code, Codex, and Gemini CLI (more commands coming)",
+      "Multiple themes & visual styles** to fit different setups and vibes"
+    ]
+  },
+  "newmarcel/KeepingYouAwake": {
+    "full_name": "newmarcel/KeepingYouAwake",
+    "name": "KeepingYouAwake",
+    "owner": "newmarcel",
+    "url": "https://github.com/newmarcel/KeepingYouAwake",
+    "homepage": "https://keepingyouawake.app",
+    "stargazers_count": 6887,
+    "forks_count": 264,
+    "primary_language": "Objective-C",
+    "topics": [
+      "macos",
+      "objective-c",
+      "caffeine",
+      "menubar",
+      "utility"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-17T03:21:31Z",
+    "pushed_at": "2026-08-15T11:38:08Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "macOS 系統預設的省電休眠機制常會在進行大檔下載、長時間編譯、簡報演講或模型推理時突然關閉螢幕或進入休眠，中斷當前任務。",
+      "how": "基於 Objective-C 開發的輕量級選單列小工具，優雅封裝了 macOS 原生 caffeinate 命令列守護進程，以極低 CPU 與記憶體佔用阻止系統進入睡眠狀態，支援自訂啟用時長預設。",
+      "what": "交付開源經典的 macOS 防休眠選單列工具 KeepingYouAwake（經典 Caffeine 的現代開源替代品），支援暗色模式、視網膜螢幕圖標、定時自動停用與 Homebrew Cask 一鍵安裝。"
+    },
+    "bullets": [
+      "Version 1.6.8 is the last release that supports macOS Big Sur and older (11.0, 10.15, 10.14, 10.13)",
+      "Version 1.6.2 is the last release that supports macOS Sierra (10.12)",
+      "Version 1.5.2 is the last release that supports macOS Yosemite (10.10) and El Capitan (10.11)"
+    ]
+  },
+  "MonitorControl/MonitorControl": {
+    "full_name": "MonitorControl/MonitorControl",
+    "name": "MonitorControl",
+    "owner": "MonitorControl",
+    "url": "https://github.com/MonitorControl/MonitorControl",
+    "homepage": "https://monitorcontrol.app",
+    "stargazers_count": 34110,
+    "forks_count": 997,
+    "primary_language": "Swift",
+    "topics": [
+      "macos",
+      "keyboard",
+      "brightness",
+      "volume",
+      "external-monitor",
+      "m1",
+      "apple",
+      "silicon",
+      "ddc",
+      "macos-app"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-17T03:21:28Z",
+    "pushed_at": "2026-08-31T16:37:52Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "macOS 原生不支援透過鍵盤頂部的亮度與音量快捷鍵調節第三方外接顯示器的硬體亮度，外接螢幕使用者必須忍受繁瑣的顯示器實體按鈕調整選單。",
+      "how": "基於 Swift 開發，底層利用 DDC/CI 協議透過顯示器傳輸線（DisplayPort、HDMI、Type-C）直接發送硬體控制指令；支援 Apple Silicon 與 Intel 全系列 Mac，並使用軟體遮罩（Gamma 表調節）平滑補足不支援 DDC 的螢幕。",
+      "what": "交付 macOS 上最受歡迎的外接顯示器控制軟體 MonitorControl，完美無縫還原原生 macOS 亮度/音量 HUD 浮層、支援 Apple 鍵盤快捷鍵無縫映射與選單列滑桿微調。"
+    },
+    "bullets": [
+      "Control your display's brightness, volume and contrast!",
+      "Shows native OSD for brightness and volume.",
+      "Supports multiple protocols to adjust brightness: DDC for external displays (brightness, contrast, volume), native Apple protocol for Apple and built-in displays, Gamma table control for software dimming, shade control for AirPlay, Sidecar and Display Link devices and other virtual screens.",
+      "Supports smooth brightness transitions.",
+      "Seamlessly combined hardware and software dimming extends dimming beyond the minimum brightness available on your display.",
+      "Synchronize brightness from built-in and Apple screens - replicate Ambient light sensor and touch bar induced changes to a non-Apple external display!",
+      "Sync up all your displays using a single slider or keyboard shortcuts.",
+      "Allows dimming to full black."
+    ]
+  },
+  "sfsam/Itsycal": {
+    "full_name": "sfsam/Itsycal",
+    "name": "Itsycal",
+    "owner": "sfsam",
+    "url": "https://github.com/sfsam/Itsycal",
+    "homepage": null,
+    "stargazers_count": 3989,
+    "forks_count": 268,
+    "primary_language": "Objective-C",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2026-01-17T03:17:47Z",
+    "pushed_at": "2026-04-05T05:43:53Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": false,
+    "analysis": {
+      "why": "macOS 系統自帶的頂部選單列時鐘僅能顯示日期時間，點擊無法彈出月曆檢視，使用者必須啟動笨重的官方 Calendar 應用才能查閱日程。",
+      "how": "基於 Objective-C 編寫的原生 macOS 選單列微型應用；直接整合 macOS EventKit 框架，安全同步本機與 iCloud 行事曆事件，以極簡介面呈現當月日曆與待辦日程。",
+      "what": "交付廣受好評的輕量級選單列小日曆 Itsycal，支援自訂選單列日期格式、快速新增與檢視日程事件、暗色外觀適配與極低的系統資源開銷。"
+    },
+    "bullets": []
+  },
+  "BayramAnnakov/claude-reflect": {
+    "full_name": "BayramAnnakov/claude-reflect",
+    "name": "claude-reflect",
+    "owner": "BayramAnnakov",
+    "url": "https://github.com/BayramAnnakov/claude-reflect",
+    "homepage": "",
+    "stargazers_count": 1427,
+    "forks_count": 120,
+    "primary_language": "Python",
+    "topics": [
+      "claude-code",
+      "claude-skills",
+      "memory",
+      "productivity",
+      "self-learning"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-17T01:20:09Z",
+    "pushed_at": "2026-03-16T19:41:15Z",
+    "category_id": "prompts_and_specs",
+    "category_name": "提示詞工程、Agent 規範與系統指令剖析",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "開發者每次在終端糾正 Claude Code 的編程錯誤或表達個人偏好（如「請使用 gpt-4.1 而非 gpt-4」）後，這些寶貴的反饋在新的對話會話中往往會被重置，導致人類陷入重複糾錯的沮喪循環。",
+      "how": "基於 Python 開發的自我學習系統外掛；透過掛鉤（Hooks）自動捕獲使用者在會話中對 Claude 的反對、肯定與風格偏好，經提煉後透過 /reflect 指令自動將行為準則沉澱並同步寫入專案的 CLAUDE.md 與 AGENTS.md。",
+      "what": "提供開源插件 claude-reflect，支援自動捕獲糾錯回饋、發現工作流重複模式、動態更新專案指導文件，讓 Claude Code 在長期使用中越來越懂開發者的工作習慣。"
+    },
+    "bullets": [
+      "Claude Code CLI installed",
+      "Python 3.6+ (included on most systems)",
+      "macOS**: Fully supported",
+      "Linux**: Fully supported",
+      "Windows**: Fully supported (native Python, no WSL required)",
+      "Corrections**: `\"no, use X\"` / `\"don't use Y\"` / `\"actually...\"` / `\"that's wrong\"`",
+      "Positive feedback**: `\"Perfect!\"` / `\"Exactly right\"` / `\"Great approach\"`",
+      "Explicit markers**: `\"remember:\"` — highest confidence"
+    ]
+  },
+  "obra/superpowers": {
+    "full_name": "obra/superpowers",
+    "name": "superpowers",
+    "owner": "obra",
+    "url": "https://github.com/obra/superpowers",
+    "homepage": "",
+    "stargazers_count": 282106,
+    "forks_count": 25266,
+    "primary_language": "Shell",
+    "topics": [
+      "ai",
+      "brainstorming",
+      "coding",
+      "obra",
+      "sdlc",
+      "skills",
+      "superpowers",
+      "subagent-driven-development"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-13T14:07:01Z",
+    "pushed_at": "2026-09-04T23:04:36Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "許多 AI Coding Agent 缺乏結構化的軟體工程方法論，在面對複雜功能時常貿然寫代碼、遺漏邊界測試或破壞現有架構；開發者需要一套可直接賦能 Agent 的完整工程思維體系與可插拔技能框架。",
+      "how": "遵循 Agent Skills 規範（agentskills.io），由資深架構師 Jesse Vincent 打造；以「子代理驅動開發（Subagent-Driven Development, SDD）」為核心，將軟體工程拆解為頭腦風暴、架構設計、TDD 測試驅動開發、代碼重構與同行評審等嚴謹技能階段。",
+      "what": "交付星標突破 28 萬的軟體工程方法論技能庫 Superpowers，相容 Claude Code、Codex、Cursor、Gemini CLI 等十數種終端環境，提供開箱即用的端到端架構決策與高品質代碼生成技能。"
+    },
+    "bullets": [
+      "How it works",
+      "Commercial Services",
+      "Getting Started",
+      "Claude Code",
+      "Antigravity",
+      "Factory Droid",
+      "GitHub Copilot CLI",
+      "Grok Build CLI"
+    ]
+  },
+  "code-yeongyu/oh-my-openagent": {
+    "full_name": "code-yeongyu/oh-my-openagent",
+    "name": "oh-my-openagent",
+    "owner": "code-yeongyu",
+    "url": "https://github.com/code-yeongyu/oh-my-openagent",
+    "homepage": "https://omo.dev",
+    "stargazers_count": 68731,
+    "forks_count": 5643,
+    "primary_language": "TypeScript",
+    "topics": [
+      "opencode",
+      "ai",
+      "anthropic",
+      "claude",
+      "claude-skills",
+      "cursor",
+      "gemini",
+      "ide",
+      "openai",
+      "orchestration"
+    ],
+    "license": "NOASSERTION",
+    "starred_at": "2026-01-10T02:58:37Z",
+    "pushed_at": "2026-09-05T18:50:56Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "原生終端 Agent 在應對大規模極限編程（Ultrawork）時缺乏激進的多模型協同與高強度自動化調度；同時開發者在多個 Agent 執行框架（OpenCode、Codex、Pi 等）間切換時設定繁瑣。",
+      "how": "基於 TypeScript 構建，正重構為支援多 Harness（OpenCode, Codex, Pi 等）的次世代 Agent OS；內建極限自動化工作流（OmO），並衍生推出專為 Codex 優化的零配置發行版 LazyCodex，強調完全放手讓 Agent 進行平行編程衝刺。",
+      "what": "提供超人氣的 Agent 增強發行版 Oh My OpenAgent（OmO）與 LazyCodex，具備多 Harness 統一調度、極限平行編程工作流、開箱即用配置與 Discord 社群實時維護生態。"
+    },
+    "bullets": [
+      "Ultimate Edition (omo for OpenCode)** — full omo. 11 agents, 54+ lifecycle hooks, 5 built-in MCPs, all slash commands, Team Mode, `/goal`, ultrawork — everything. Hashline edits are opt-in (`hashline_edit: true`).",
+      "Light Edition (omo for Codex CLI)** — the portable components that fit Codex's plugin system: `rules`, `comment-checker`, `git-bash`, `lsp`, `ultrawork`, `ulw-loop`, `ulw-execute-continuation`, and `telemetry` at the core, plus `teammode` and supporting components (`bootstrap`, `lcx`, and more), plugin-scoped MCPs for `grep_app`, `context7`, `git_bash`, and `lsp`, and the shared `ast-grep` skill. It installs Codex agent TOMLs into `~/.codex/agents/`. No OpenCode `team_*` tools — Codex CLI's own spawn/collaboration surface does that work.",
+      "Senpi Edition (standalone, beta)** — the native `omo` command with the OMO extension built in. It installs from `omo-ai@beta` rather than loading into OpenCode or Codex.",
+      "Already use OpenCode, or want the most-tested path? Choose **Ultimate**: `bunx oh-my-openagent install`.",
+      "Already use Codex CLI? Choose **Light**: `npx lazycodex-ai install`.",
+      "Want one command without installing a host first? Choose **Senpi/native (beta)**: `npm i -g omo-ai@beta`."
+    ]
+  },
+  "mlabonne/llm-course": {
+    "full_name": "mlabonne/llm-course",
+    "name": "llm-course",
+    "owner": "mlabonne",
+    "url": "https://github.com/mlabonne/llm-course",
+    "homepage": "https://mlabonne.github.io/blog/",
+    "stargazers_count": 82317,
+    "forks_count": 9578,
+    "primary_language": "N/A",
+    "topics": [
+      "course",
+      "llm",
+      "machine-learning",
+      "roadmap",
+      "large-language-models"
+    ],
+    "license": "Apache-2.0",
+    "starred_at": "2026-01-10T00:34:51Z",
+    "pushed_at": "2026-02-05T13:09:26Z",
+    "category_id": "education_productivity",
+    "category_name": "開源教學指南、電腦科學精選與終端生產力",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "大型語言模型（LLM）領域技術發展一日千里，涵蓋預訓練、微調、量化、對齊（RLHF/DPO）與推論部署等繁雜學科，初學者與工程師缺乏一套由淺入深、理論與程式碼實踐兼備的權威學習路線圖。",
+      "how": "由著名 AI 研究員 Maxime Labonne 撰寫維護；結構化劃分為「LLM 基礎與架構」、「LLM 科學家（模型訓練/微調/量化）」與「LLM 工程師（應用/RAG/部署）」三大模組，全面配套免費的 Google Colab 筆記本代碼。",
+      "what": "交付全球最頂尖的大型語言模型開源課程 llm-course，包含完整的技術學習路線圖、30+ 個可直接運行的 Colab 實戰筆記本、權威論文推薦清單與主流微調量化（Unsloth, bitsandbytes）實戰指引。"
+    },
+    "bullets": []
+  },
+  "doggy8088/claude-code": {
+    "full_name": "doggy8088/claude-code",
+    "name": "claude-code",
+    "owner": "doggy8088",
+    "url": "https://github.com/doggy8088/claude-code",
+    "homepage": "https://code.claude.com/docs/en/overview",
+    "stargazers_count": 24,
+    "forks_count": 5,
+    "primary_language": "Shell",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-01-09T04:20:17Z",
+    "pushed_at": "2026-01-08T18:16:03Z",
+    "category_id": "prompts_and_specs",
+    "category_name": "提示詞工程、Agent 規範與系統指令剖析",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "Anthropic 官方推出的 Claude Code 終端代理具備革命性的自主編程能力，但官方文件大多為英文且分散，繁體中文社群缺乏一份由資深工程師親自梳理的架構解析、使用指南與環境建置心得。",
+      "how": "由台灣著名微軟 MVP Will 保哥親自撰寫與維護；結合作者長期在終端命令列、Git 工作流與軟體架構的實戰經驗，深入剖析 Claude Code 的工具調用原理、自然語言交互規範與安全邊界。",
+      "what": "交付高品質的 Claude Code 繁體中文實戰指南，詳盡介紹終端運作機制、代碼庫理解原理、例行任務自動化腳本撰寫、複雜代碼解構與 Git 工作流整合的最佳實踐。"
+    },
+    "bullets": [
+      "安裝 Claude Code：",
+      "導航至您的專案目錄並執行 `claude`。"
+    ]
+  },
+  "ChrisWiles/claude-code-showcase": {
+    "full_name": "ChrisWiles/claude-code-showcase",
+    "name": "claude-code-showcase",
+    "owner": "ChrisWiles",
+    "url": "https://github.com/ChrisWiles/claude-code-showcase",
+    "homepage": null,
+    "stargazers_count": 6059,
+    "forks_count": 575,
+    "primary_language": "JavaScript",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-01-08T15:06:19Z",
+    "pushed_at": "2026-01-06T19:05:18Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "許多開發者嘗試在正式專案中引入 Claude Code 時，不知道如何標準化地配置專案級的 Hooks、自訂 Skills、特定任務 Agents 與 CI/CD 整合，缺乏可直接複製參考的企業級配置典範。",
+      "how": "提供結構化且涵蓋全生命週期的真實專案展示架構；完整演示如何編寫自訂命令、串接 GitHub Actions 工作流、透過 Hooks 執行自動化代碼檢查，以及組織跨任務的專用 Agent 模組。",
+      "what": "交付全方位的 Claude Code 專案配置範本（Showcase），包含完整的 .claude 配置目錄、自訂技能集範例、自動化 Git 提交掛鉤以及與 GitHub Actions 協同作業的完整工作流代碼。"
+    },
+    "bullets": [
+      "Monthly docs sync - Reads commits from the last month and makes sure docs are still aligned",
+      "Weekly code quality - Reviews random directories and auto-fixes issues",
+      "Biweekly dependency audit - Safe dependency updates with test verification",
+      "Directory Structure",
+      "Quick Start",
+      "Configuration Reference",
+      "CLAUDE.md - Project Memory",
+      "settings.json - Hooks & Environment"
+    ]
+  },
+  "OthmanAdi/planning-with-files": {
+    "full_name": "OthmanAdi/planning-with-files",
+    "name": "planning-with-files",
+    "owner": "OthmanAdi",
+    "url": "https://github.com/OthmanAdi/planning-with-files",
+    "homepage": "https://www.skills.sh/othmanadi/planning-with-files/planning-with-files",
+    "stargazers_count": 26648,
+    "forks_count": 2220,
+    "primary_language": "Shell",
+    "topics": [
+      "claude",
+      "claude-code",
+      "claude-skills",
+      "manus",
+      "agent-skills",
+      "planning",
+      "autonomous-agents",
+      "codex",
+      "cursor",
+      "multi-agent-systems"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-07T04:13:20Z",
+    "pushed_at": "2026-09-05T20:43:16Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "AI Coding Agent 在處理長週期或跨多輪對話的複雜任務時，極易因上下文壓縮（Compaction）、清理（/clear）或注意力漂移（Context Rot）而遺忘最初的工程目標與執行進度。",
+      "how": "借鑒 Manus 系統架構理念；設計「基於磁碟實體檔案的持久規劃」機制，由 task_plan.md（任務分解）、findings.md（架構發現）與 progress.md（進度記錄）三塊實體石碑組成；透過每輪觸發的 Hook 機制強制將計畫重新注入 Agent 上下文，並以確定性驗證把關完成條件。",
+      "what": "提供廣受推崇的防崩潰規劃技能包 Planning with Files，相容 Claude Code、Codex、Cursor、OpenCode 等 60+ 款代理工具，讓 Agent 具備跨會話自我恢復與嚴密長程任務規劃能力。"
+    },
+    "bullets": [
+      "Volatile memory**: the TodoWrite list disappears on context reset",
+      "Goal drift**: after 50+ tool calls, the original goals get crowded out",
+      "Hidden errors**: failures are not tracked, so the same mistakes repeat",
+      "Context stuffing**: everything crammed into the window instead of stored"
+    ]
+  },
+  "BloopAI/vibe-kanban": {
+    "full_name": "BloopAI/vibe-kanban",
+    "name": "vibe-kanban",
+    "owner": "BloopAI",
+    "url": "https://github.com/BloopAI/vibe-kanban",
+    "homepage": "https://www.vibekanban.com/",
+    "stargazers_count": 28020,
+    "forks_count": 3001,
+    "primary_language": "Rust",
+    "topics": [
+      "agent",
+      "ai-agents",
+      "kanban",
+      "management",
+      "task-manager"
+    ],
+    "license": "Apache-2.0",
+    "starred_at": "2026-01-04T07:34:44Z",
+    "pushed_at": "2026-04-24T09:17:34Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "當開發者同時調度多個 Coding Agent 處理專案時，終端命令列中的文字流無法清晰呈現所有任務的全域視圖、阻塞節點與審查狀態，需要視覺化看板來管理 Agent 工作流。",
+      "how": "基於 Rust 與現代前端技術構建；將敏捷開發的 Kanban 看板理念深度融入 AI Coding 工作流，即時同步本地 Git 分支與 Agent 的執行進程，讓工程師能直觀拖拽管理各任務階段。",
+      "what": "交付專為 Claude Code、Codex 等編程代理打造的高效能視覺化任務看板（Vibe Kanban），大幅提升多任務平行推進與代理審查的管理效率。"
+    },
+    "bullets": [
+      "Plan with kanban issues** — create, prioritise, and assign issues on a kanban board",
+      "Run coding agents in workspaces** — each workspace gives an agent a branch, a terminal, and a dev server",
+      "Review diffs and leave inline comments** — send feedback directly to the agent without leaving the UI",
+      "Preview your app** — built-in browser with devtools, inspect mode, and device emulation",
+      "Switch between 10+ coding agents** — Claude Code, Codex, Gemini CLI, GitHub Copilot, Amp, Cursor, OpenCode, Droid, CCR, and Qwen Code",
+      "Create pull requests and merge** — open PRs with AI-generated descriptions, review on GitHub, and merge",
+      "Rust (latest stable)",
+      "Node.js (>=20)"
+    ]
+  },
+  "AndyMik90/Aperant": {
+    "full_name": "AndyMik90/Aperant",
+    "name": "Aperant",
+    "owner": "AndyMik90",
+    "url": "https://github.com/AndyMik90/Aperant",
+    "homepage": "https://aperant.com",
+    "stargazers_count": 14558,
+    "forks_count": 1920,
+    "primary_language": "TypeScript",
+    "topics": [],
+    "license": "AGPL-3.0",
+    "starred_at": "2026-01-04T07:33:38Z",
+    "pushed_at": "2026-06-14T08:27:00Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "現有編程助手多停留在「單次詢問—單次修改」的片段交互，無法像真人工程師團隊般跨越多個會話自主完成軟體的需求規劃、代碼編寫、測試驗證與修復的全流程閉環。",
+      "how": "前身為 Auto Claude，基於 TypeScript 構建的自主多 Agent 編程框架；採用階層式多代理協同模式（架構規劃者、執行程式碼編寫者、QA 驗證測試者），支援跨多會話的長期狀態持久化與自動化測試斷言閉環。",
+      "what": "交付完整的自主軟體開發框架 Aperant，具備自主任務看板、多 Agent 協同分工、自動化單元測試回饋迴圈與長週期軟體工程交付能力。"
+    },
+    "bullets": [
+      "Claude Pro/Max subscription** - Get one here",
+      "Claude Code CLI** - `npm install -g @anthropic-ai/claude-code`",
+      "Git repository** - Your project must be initialized as a git repo",
+      "Download and install** the app for your platform",
+      "Open your project** - Select a git repository folder",
+      "Connect Claude** - The app will guide you through OAuth setup",
+      "Create a task** - Describe what you want to build",
+      "Watch it work** - Agents plan, code, and validate autonomously"
+    ]
+  },
+  "nextlevelbuilder/ui-ux-pro-max-skill": {
+    "full_name": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "name": "ui-ux-pro-max-skill",
+    "owner": "nextlevelbuilder",
+    "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+    "homepage": "https://www.uupm.cc/",
+    "stargazers_count": 125285,
+    "forks_count": 13409,
+    "primary_language": "Python",
+    "topics": [
+      "ai-skills",
+      "antigravity",
+      "claude",
+      "claude-code",
+      "command-line",
+      "copilot",
+      "cursor-ai",
+      "html5",
+      "kiro",
+      "landing-page"
+    ],
+    "license": "MIT",
+    "starred_at": "2026-01-03T02:12:17Z",
+    "pushed_at": "2026-09-03T14:13:39Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "AI 生成的前端介面往往充斥著平庸、模板化且缺乏美感的樣式（通常被稱為「AI 塑膠感」），缺乏對專業色彩系統、字體排版層次與現代設計規範的深刻理解。",
+      "how": "遵循 Agent Skills 規範，由資深設計工程團隊精心打造；內建包含 79 種可檢索 UI 設計風格的龐大美學智庫與多平台跨端設計原則，賦予 Agent 在生成網頁或應用程式時精準調配色彩、留白與動效的設計智能。",
+      "what": "交付星標超過 12 萬的前端美學設計神級技能 UI UX Pro Max，相容 Claude Code、Cursor、Copilot、Antigravity 等環境，能指導 AI 生成具備頂級現代美感的落地頁、Web 應用與跨平台 UI。"
+    },
+    "bullets": []
+  },
+  "joshhu/imagepdf2txt": {
+    "full_name": "joshhu/imagepdf2txt",
+    "name": "imagepdf2txt",
+    "owner": "joshhu",
+    "url": "https://github.com/joshhu/imagepdf2txt",
+    "homepage": null,
+    "stargazers_count": 82,
+    "forks_count": 16,
+    "primary_language": "Python",
+    "topics": [],
+    "license": null,
+    "starred_at": "2026-01-01T14:34:19Z",
+    "pushed_at": "2025-12-31T17:08:47Z",
+    "category_id": "web_doc_parsing",
+    "category_name": "多模態數據採集、檔案解析與結構化轉換",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "掃描件或圖片型 PDF 檔案無法直接選取複製文字，傳統 OCR 工具往往遺失原始段落排版、將表格內容打散成亂碼，且欠缺簡體到繁體台灣慣用語的自動校正能力。",
+      "how": "基於 Python 3.10-3.12 構建，整合百度 PaddleOCR 深度學習文字識別模型（支援 NVIDIA GPU 硬體加速）與 poppler-utils；具備智慧段落幾何分析（依據文字座標重建段落）與表格結構識別（輸出為 ASCII 表格），並可串接 LLM API 進行多語言翻譯。",
+      "what": "交付命令列圖片型 PDF 轉文字工具 imagepdf2txt，支援中英日多語言高精度辨識、ASCII 表格排版保留、簡繁台灣用語轉換與大模型自動潤飾翻譯。"
+    },
+    "bullets": [
+      "智慧段落識別**：根據文字位置自動分組成段落，保留原始文件結構",
+      "表格識別**：支援表格結構識別，輸出為 ASCII 表格格式",
+      "簡繁轉換**：內建簡體中文轉繁體中文（台灣用語）功能",
+      "LLM 翻譯**：整合 LLM API 進行多語言翻譯",
+      "GPU 加速**：支援 NVIDIA GPU 加速處理",
+      "Python 3.10 - 3.12",
+      "NVIDIA GPU（可選，但建議使用以加速處理）",
+      "poppler-utils（用於 PDF 轉圖片）"
+    ]
+  },
+  "anthropics/claude-code": {
+    "full_name": "anthropics/claude-code",
+    "name": "claude-code",
+    "owner": "anthropics",
+    "url": "https://github.com/anthropics/claude-code",
+    "homepage": "https://code.claude.com/docs/en/overview",
+    "stargazers_count": 144180,
+    "forks_count": 23030,
+    "primary_language": "Python",
+    "topics": [],
+    "license": null,
+    "starred_at": "2025-12-31T12:03:24Z",
+    "pushed_at": "2026-09-04T19:58:10Z",
+    "category_id": "agent_orchestration",
+    "category_name": "AI 智能體底座、執行架構與多 Agent 協同",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "軟體開發涉及複雜的多檔案代碼關聯、終端命令除錯與 Git 版本控制，傳統 IDE 插件難以承擔端到端的自主編程重任；工程師需要一個直接常駐於系統終端、完全理解整個代碼庫拓撲架構的代理人。",
+      "how": "由 Anthropic 官方傾力打造的旗艦級終端自主編程 Agent，直接常駐在命令列環境中；深度整合 Claude 3.7 Sonnet 等頂尖推理模型，具備完整的本地 Bash 執行、檔案系統檢索、代碼語意解構與 Git 工作流編程能力。",
+      "what": "交付官方 Claude Code 終端工具，支援自然語言直接指揮代碼庫重構、疑難 Bug 根因分析與修復、自動化測試編寫、Git PR 提交與自訂外掛技能擴展（Plugins/Skills）。"
+    },
+    "bullets": [
+      "Install Claude Code:",
+      "Navigate to your project directory and run `claude`."
+    ]
+  },
+  "doggy8088/PromptFill": {
+    "full_name": "doggy8088/PromptFill",
+    "name": "PromptFill",
+    "owner": "doggy8088",
+    "url": "https://github.com/doggy8088/PromptFill",
+    "homepage": "https://learn.duotify.com/user/webapps/prompt-fill/",
+    "stargazers_count": 38,
+    "forks_count": 20,
+    "primary_language": "JavaScript",
+    "topics": [
+      "gemini-3-pro-image-preview",
+      "nano-banana-pro"
+    ],
+    "license": "MIT",
+    "starred_at": "2025-12-27T05:25:29Z",
+    "pushed_at": "2026-09-06T00:24:45Z",
+    "category_id": "prompts_and_specs",
+    "category_name": "提示詞工程、Agent 規範與系統指令剖析",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "在使用 Nano Banana Pro、Midjourney 等 AI 繪圖工具時，提示詞往往由長篇複雜的風格標籤、視角鏡頭與藝術家修飾詞組成，記憶維護困難且手動修改容易出錯。",
+      "how": "基於 React 18、Vite 與 Tailwind CSS 打造的純前端單頁應用；採用結構化 Prompt 引擎，支援 {{variable}} 語法自動將文字範本解析為視覺化互動表單；內建分類動態詞庫，支援自訂標籤擴充與批次匯出。",
+      "what": "交付開源的結構化提示詞填空工具 PromptFill，支援即時表單填空拼裝 Prompt、美術風格動態詞庫管理、一鍵複製與範本資料持久化。"
+    },
+    "bullets": [
+      "✅ 結構化 Prompt 引擎**：支援 `{{variable}}` 語法，將文字模板自動轉為互動式表單。",
+      "✅ 動態詞庫系統**：預置數百個常用美術標籤，支援分類管理、自訂擴充與批次匯入。",
+      "✅ 高清社群分享**：內建模板封面渲染，支援一鍵匯出精美 JPG 長圖（自動擷取氛圍色）。",
+      "✅ 模板/版本感知**：官方模板雲端同步感知，免手動重新整理即可取得最新模板與功能。",
+      "✅ 純本地儲存**：基於瀏覽器 LocalStorage，無需註冊登入，資料完全掌握在自己手上。",
+      "🧩 智能詞庫管理**：",
+      "分類管理**：支援自訂詞庫分類（人物、動作、畫面、物品等），並以顏色區分，視覺更清晰。",
+      "雙向同步**：右側預覽填空時可直接新增「自訂選項」，會自動同步回左側詞庫，無需來回切換。"
+    ]
+  },
+  "LeslieLeung/glean": {
+    "full_name": "LeslieLeung/glean",
+    "name": "glean",
+    "owner": "LeslieLeung",
+    "url": "https://github.com/LeslieLeung/glean",
+    "homepage": "https://gleanapp.cn",
+    "stargazers_count": 856,
+    "forks_count": 63,
+    "primary_language": "TypeScript",
+    "topics": [
+      "rss",
+      "rss-reader",
+      "mcp",
+      "mcp-server"
+    ],
+    "license": "AGPL-3.0",
+    "starred_at": "2025-12-27T03:17:46Z",
+    "pushed_at": "2026-09-03T22:41:09Z",
+    "category_id": "mcp_ecosystem",
+    "category_name": "MCP 協議伺服器與主機整合生態",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "資訊高強度消費者面臨 RSS 訂閱源爆炸、文章過載難以消化，且傳統閱讀器無法將訂閱內容無縫串接至個人 AI 知識庫與 Agent 檢索鏈條中。",
+      "how": "基於 TypeScript、React/Next.js 開發的全端個人知識管理應用；支援 Docker Compose 一鍵部署，底層整合 Milvus 向量資料庫進行語意檢索；最關鍵的是內建原生 MCP Server，允許外部 AI Agent 透過標準協議直接查詢使用者的 RSS 收藏與筆記內容。",
+      "what": "交付自託管 RSS 閱讀器與知識管理工具 Glean（拾灵），支援 OPML 匯入匯出、全文過濾、智慧閱讀模式，並提供標準 MCP 伺服器端點供 Agent 調用。"
+    },
+    "bullets": [
+      "📰 **RSS Subscription** - Subscribe and organize RSS/Atom feeds with OPML import/export",
+      "📚 **Smart Reading** - Clean reading experience with content filtering",
+      "🔖 **Read Later** - Save articles for later reading with auto-cleanup",
+      "📁 **Folders & Tags** - Multi-level folders and tags for organization",
+      "⭐ **Bookmarks** - Save articles from feeds or external URLs",
+      "🔧 **Background Sync** - Automatic feed updates every 15 minutes",
+      "🔒 **Self-hosted** - Full data ownership with Docker deployment",
+      "🎨 **Modern UI** - Beautiful, responsive warm dark theme interface"
+    ]
+  },
+  "firecrawl/open-scouts": {
+    "full_name": "firecrawl/open-scouts",
+    "name": "open-scouts",
+    "owner": "firecrawl",
+    "url": "https://github.com/firecrawl/open-scouts",
+    "homepage": "https://openscouts.firecrawl.dev",
+    "stargazers_count": 1360,
+    "forks_count": 190,
+    "primary_language": "TypeScript",
+    "topics": [
+      "ai-agents",
+      "alerts",
+      "automation",
+      "email-notifications",
+      "firecrawl",
+      "nextjs",
+      "open-source",
+      "openai",
+      "posthog",
+      "react"
+    ],
+    "license": null,
+    "starred_at": "2025-12-27T01:17:36Z",
+    "pushed_at": "2026-05-22T10:33:49Z",
+    "category_id": "web_doc_parsing",
+    "category_name": "多模態數據採集、檔案解析與結構化轉換",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "傳統網頁監控工具只能比對 HTML 原始碼差異，常因廣告或動態無效內容觸發假警報；開發者需要由 AI 驅動、具備語意理解且能主動全網搜索並即時通知的「智慧偵察兵（Scouts）」。",
+      "how": "基於 Next.js 15、React 19 與 Tailwind CSS v4 打造，後端結合 Supabase（Auth、Edge Functions 與 pgvector 向量檢索）；核心採用 Firecrawl SDK 進行深層無損網頁爬取與乾淨 Markdown 轉換，結合 OpenAI API 進行內容語意判斷與電子郵件警報分發。",
+      "what": "交付開源的 AI 網頁監控平台 Open Scouts，支援設定定時排程巡邏任務、全自動全網搜尋與特定主題追蹤、智慧語意差異判斷以及即時 Email 警報通知。"
+    },
+    "bullets": [
+      "Next.js 15**",
+      "TypeScript**",
+      "Tailwind CSS v4**",
+      "Supabase** (Database + Auth + Edge Functions)",
+      "pgvector** (Vector embeddings for semantic search)",
+      "Firecrawl SDK** (@mendable/firecrawl-js)",
+      "OpenAI API** (AI Agent + Embeddings)",
+      "Resend** (Email Notifications)"
+    ]
+  },
+  "PleasePrompto/notebooklm-skill": {
+    "full_name": "PleasePrompto/notebooklm-skill",
+    "name": "notebooklm-skill",
+    "owner": "PleasePrompto",
+    "url": "https://github.com/PleasePrompto/notebooklm-skill",
+    "homepage": "",
+    "stargazers_count": 7755,
+    "forks_count": 879,
+    "primary_language": "Python",
+    "topics": [],
+    "license": "MIT",
+    "starred_at": "2025-12-26T15:52:38Z",
+    "pushed_at": "2025-11-21T17:42:12Z",
+    "category_id": "claude_code_skills",
+    "category_name": "Claude Code / Codex 技能擴展與自定義工具集",
+    "readme_has_content": true,
+    "analysis": {
+      "why": "本地 RAG 方案通常需要配置複雜的向量資料庫與分塊策略，且在處理超長文件時極易遺失細節；Google NotebookLM 具備由 Gemini 驅動的高品質長文理解與精確來源引用能力，但過去無法直接在終端 Claude Code 中調用。",
+      "how": "遵循 Claude Code Skill 規範構建的專用擴充技能；透過底層瀏覽器自動化與持久化 Session 認證，直接橋接本機 Claude Code 與 Google NotebookLM 筆記本；Agent 發問時由 NotebookLM 僅依據使用者上傳的文件提供帶來源標註（Source-grounded）的可靠回答。",
+      "what": "交付 NotebookLM Claude Code Skill，支援在終端中直接列出、選取與對話 NotebookLM 筆記本，獲取無幻搞、具備嚴格文獻引用的專業知識回答。"
+    },
+    "bullets": [
+      "Massive token consumption**: Searching through documentation means reading multiple files repeatedly",
+      "Inaccurate retrieval**: Searches for keywords, misses context and connections between docs",
+      "Hallucinations**: When it can't find something, it invents plausible-sounding APIs",
+      "Manual copy-paste**: Switching between NotebookLM browser and your editor constantly",
+      "Pre-processed by Gemini**: Upload docs once, get instant expert knowledge",
+      "Natural language Q&A**: Not just retrieval — actual understanding and synthesis",
+      "Multi-source correlation**: Connects information across 50+ documents",
+      "Citation-backed**: Every answer includes source references"
+    ]
+  }
+}

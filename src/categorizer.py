@@ -152,6 +152,9 @@ def clean_text(text: str) -> str:
 
 def classify_repo(full_name: str, repo_info: Dict[str, Any]) -> str:
     """Classify repository into one of the 10 core categories with priority filtering."""
+    if repo_info.get("category_id") and repo_info.get("category_id") in CATEGORIES_META:
+        return repo_info["category_id"]
+
     desc = clean_text(repo_info.get("description") or "")
     topics = [t.lower() for t in repo_info.get("topics", [])]
     name = full_name.lower()
@@ -162,13 +165,14 @@ def classify_repo(full_name: str, repo_info: Dict[str, Any]) -> str:
         return 'code_intelligence'
 
     # 2. Context Engineering, Long-Term Memory & Compression
-    if any(k in name for k in ['mempalace', 'everos', 'headroom', 'mem0', 'cognee', 'turbovec', 'mnemosyne']) or \
-       any(k in desc for k in ['memory layer', 'long-term memory', 'compress tool output', 'context reduction', 'context-engineering', 'zero-cloud ai memory']):
+    if any(k in name for k in ['mempalace', 'everos', 'headroom', 'mem0', 'cognee', 'turbovec', 'mnemosyne', 'personal-ai-memory', 'context-hub', 'graphrag']) or \
+       any(k in desc for k in ['memory layer', 'long-term memory', 'compress tool output', 'context reduction', 'context-engineering', 'zero-cloud ai memory', 'memory graph', 'graph-based retrieval-augmented generation', 'graphrag']) or \
+       any(k in topics for k in ['graphrag']):
         return 'context_memory_rag'
 
     # 3. Document Parsing, Web Scraping & Multimodal Extraction
-    if any(k in name for k in ['markitdown', 'firecrawl', 'anydoc', 'pdf', 'doxx', 'scrapling', 'coursenote', 'lecture-to-notes', 'textbook-to-note', 'whisper', 'voxcpm', 'unlimited-ocr']) or \
-       any(k in desc for k in ['convert word', 'clean markdown', 'scrape', 'crawling', 'pdf inspection', 'pdf extract', 'speech recognition', 'text extraction', 'tts']):
+    if any(k in name for k in ['markitdown', 'firecrawl', 'anydoc', 'pdf', 'doxx', 'scrapling', 'coursenote', 'lecture-to-notes', 'textbook-to-note', 'whisper', 'voxcpm', 'unlimited-ocr', 'doc-cleaner', 'subdown', 'imagepdf2txt', 'caption-convert']) or \
+       any(k in desc for k in ['convert word', 'clean markdown', 'scrape', 'crawling', 'pdf inspection', 'pdf extract', 'speech recognition', 'text extraction', 'tts', 'paddleocr', '字幕下載', '轉 markdown', '轉錄']):
         return 'web_doc_parsing'
 
     # 4. Visualization, Diagrams & Presentation
@@ -177,30 +181,30 @@ def classify_repo(full_name: str, repo_info: Dict[str, Any]) -> str:
         return 'visualization_diagrams'
 
     # 5. Model Routing, Proxy & Token/Cost Trackers
-    if any(k in name for k in ['router', 'proxy', 'openusage', 'tokenusage', 'codexbar', 'usage-monitor']) or \
-       any(k in desc for k in ['router', 'proxy', 'api service', 'openusage', 'usage stats', 'usage monitor', 'token cost']):
+    if any(k in name for k in ['router', 'proxy', 'openusage', 'tokenusage', 'codexbar', 'usage-monitor', 'litellm', 'fox-ai-roundtable']) or \
+       any(k in desc for k in ['router', 'proxy', 'api service', 'openusage', 'usage stats', 'usage monitor', 'token cost', 'ai gateway', 'ask once, get three answers']):
         return 'model_routing_proxy'
 
     # 6. Prompts, Specs, AGENTS.md & System Prompts
-    if any(k in name for k in ['system-prompt', 'backpass', 'learn-claude-code', 'spec-kit']) or \
-       any(k in desc for k in ['system prompt', 'agents.md', 'gradient descent', 'system prompts', 'spec-kit']):
+    if any(k in name for k in ['system-prompt', 'backpass', 'learn-claude-code', 'spec-kit', 'promptfill']) or \
+       any(k in desc for k in ['system prompt', 'agents.md', 'gradient descent', 'system prompts', 'spec-kit', '提示詞']):
         return 'prompts_and_specs'
 
     # 7. MCP Ecosystem & Servers
     if any(k in topics for k in ['mcp', 'model-context-protocol', 'mcp-server']) or \
-       any(k in name for k in ['mcp', 'modelcontextprotocol']) or \
+       any(k in name for k in ['mcp', 'modelcontextprotocol', 'ask-bridge']) or \
        any(k in desc for k in ['mcp server', 'model context protocol', 'mcp tools', 'mcp client']):
         return 'mcp_ecosystem'
 
     # 8. Claude Code / Codex Skills & Toolkits
-    if any(k in name for k in ['skill', 'skills', 'compound-engineering-plugin']) or \
+    if any(k in name for k in ['skill', 'skills', 'compound-engineering-plugin', 'grok-build-connector']) or \
        any(k in desc for k in ['skills for claude', 'claude code skill', 'agent skills', 'reusable skill']) or \
        any(k in topics for k in ['agent-skills', 'claude-skills', 'skills']):
         return 'claude_code_skills'
 
     # 9. Autonomous Coding Agents, Harnesses & Multi-Agent Frameworks
-    if any(k in name for k in ['claude-code', 'opencode', 'harness', 'agent', 'swarm', 'vibe-squad', 'herdr', 'deepagent', 'openclaw', 'llm-council', 'ai-hedge-fund', 'buzz']) or \
-       any(k in desc for k in ['agent', 'orchestrat', 'harness', 'coding agent', 'agentic', 'autonomous', 'swarm', 'coordinating several ai agents']):
+    if any(k in name for k in ['claude-code', 'opencode', 'harness', 'agent', 'swarm', 'vibe-squad', 'herdr', 'deepagent', 'openclaw', 'llm-council', 'ai-hedge-fund', 'buzz', 'copilot-ralph', 'paperclip']) or \
+       any(k in desc for k in ['agent', 'orchestrat', 'harness', 'coding agent', 'agentic', 'autonomous', 'swarm', 'coordinating several ai agents', 'chat bots']):
         return 'agent_orchestration'
 
     # 10. Education, Curricula & System Productivity (Default fallback)
