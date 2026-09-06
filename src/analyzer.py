@@ -363,74 +363,53 @@ def analyze_repository(full_name: str, repo_info: Dict[str, Any]) -> Dict[str, A
     # Check curated profiles first
     if full_name in CURATED_PROFILES:
         prof = CURATED_PROFILES[full_name]
-        return {
-            "full_name": full_name,
-            "name": full_name.split("/")[-1] if "/" in full_name else full_name,
-            "owner": full_name.split("/")[0] if "/" in full_name else "",
-            "url": url,
-            "homepage": homepage,
-            "stargazers_count": stars,
-            "forks_count": int(repo_info.get("forks_count") or 0),
-            "primary_language": lang,
-            "topics": topics,
-            "license": repo_info.get("license"),
-            "starred_at": repo_info.get("starred_at"),
-            "pushed_at": repo_info.get("pushed_at"),
-            "category_id": category_id,
-            "category_name": cat_meta.get("name", category_id),
-            "readme_has_content": bool(readme),
-            "analysis": {
-                "why": prof["why"],
-                "how": prof["how"],
-                "what": prof["what"]
-            }
-        }
-
-    # Intelligent Synthesis for all other repositories
-    sec_map = extract_sections(readme)
-    cleaned_desc = clean_markdown(desc)
-    
-    # Why Synthesis
-    why_candidates = []
-    for k, v in sec_map.items():
-        if any(w in k for w in ["why", "motivation", "problem", "background", "what is", "about"]):
-            why_candidates.append(v[:250])
-            break
-    
-    if why_candidates:
-        why_text = f"為了解決此領域的核心瓶頸：{why_candidates[0]}"
-    elif cleaned_desc:
-        why_text = f"為了解決相關領域痛點：{cleaned_desc}，提供專用自動化與工程解方。"
+        why_text, how_text, what_text = prof["why"], prof["how"], prof["what"]
     else:
-        why_text = f"為提昇 {cat_meta.get('name', '軟體工程')} 工作流效率與自動化程度而構建。"
+        # Intelligent Synthesis for all other repositories
+        sec_map = extract_sections(readme)
+        cleaned_desc = clean_markdown(desc)
+        
+        # Why Synthesis
+        why_candidates = []
+        for k, v in sec_map.items():
+            if any(w in k for w in ["why", "motivation", "problem", "background", "what is", "about"]):
+                why_candidates.append(v[:250])
+                break
+        
+        if why_candidates:
+            why_text = f"為了解決此領域的核心瓶頸：{why_candidates[0]}"
+        elif cleaned_desc:
+            why_text = f"為了解決相關領域痛點：{cleaned_desc}，提供專用自動化與工程解方。"
+        else:
+            why_text = f"為提昇 {cat_meta.get('name', '軟體工程')} 工作流效率與自動化程度而構建。"
 
-    # How Synthesis
-    how_candidates = []
-    for k, v in sec_map.items():
-        if any(h in k for h in ["how it works", "architecture", "design", "method", "technology", "pipeline"]):
-            how_candidates.append(v[:250])
-            break
-            
-    if how_candidates:
-        how_text = f"採用技術架構：{how_candidates[0]}"
-    else:
-        tech_stack = f"基於 {lang}" if lang != "N/A" else "基於現代開源架構"
-        topics_str = f"，結合 {', '.join(topics[:3])}" if topics else ""
-        how_text = f"{tech_stack}{topics_str} 打造，遵循模組化高內聚設計原則，提供可重現且易擴展之整合管線。"
+        # How Synthesis
+        how_candidates = []
+        for k, v in sec_map.items():
+            if any(h in k for h in ["how it works", "architecture", "design", "method", "technology", "pipeline"]):
+                how_candidates.append(v[:250])
+                break
+                
+        if how_candidates:
+            how_text = f"採用技術架構：{how_candidates[0]}"
+        else:
+            tech_stack = f"基於 {lang}" if lang != "N/A" else "基於現代開源架構"
+            topics_str = f"，結合 {', '.join(topics[:3])}" if topics else ""
+            how_text = f"{tech_stack}{topics_str} 打造，遵循模組化高內聚設計原則，提供可重現且易擴展之整合管線。"
 
-    # What Synthesis
-    what_candidates = []
-    for k, v in sec_map.items():
-        if any(w in k for w in ["feature", "features", "capability", "capabilities", "function", "usage", "overview"]):
-            what_candidates.append(v[:250])
-            break
-            
-    if what_candidates:
-        what_text = f"核心功能與特性：{what_candidates[0]}"
-    elif cleaned_desc:
-        what_text = f"提供功能：{cleaned_desc}，支援相應命令行與程式調用介面。"
-    else:
-        what_text = f"提供完整源碼、CLI 執行工具、配置範例與開發者整合介面。"
+        # What Synthesis
+        what_candidates = []
+        for k, v in sec_map.items():
+            if any(w in k for w in ["feature", "features", "capability", "capabilities", "function", "usage", "overview"]):
+                what_candidates.append(v[:250])
+                break
+                
+        if what_candidates:
+            what_text = f"核心功能與特性：{what_candidates[0]}"
+        elif cleaned_desc:
+            what_text = f"提供功能：{cleaned_desc}，支援相應命令行與程式調用介面。"
+        else:
+            what_text = f"提供完整源碼、CLI 執行工具、配置範例與開發者整合介面。"
 
     return {
         "full_name": full_name,

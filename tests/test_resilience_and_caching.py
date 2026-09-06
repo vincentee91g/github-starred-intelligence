@@ -72,19 +72,13 @@ class TestResilienceAndCaching(unittest.TestCase):
         self.assertFalse(is_valid_analysis_entry({"full_name": "test/repo", "category_id": "coding_agents_cli"}))
 
         # Defect 2: empty why
-        defect_why = json.loads(json.dumps(valid_entry))
-        defect_why["analysis"]["why"] = ""
-        self.assertFalse(is_valid_analysis_entry(defect_why))
+        self.assertFalse(is_valid_analysis_entry({**valid_entry, "analysis": {**valid_entry["analysis"], "why": ""}}))
 
         # Defect 3: None how
-        defect_how = json.loads(json.dumps(valid_entry))
-        defect_how["analysis"]["how"] = None
-        self.assertFalse(is_valid_analysis_entry(defect_how))
+        self.assertFalse(is_valid_analysis_entry({**valid_entry, "analysis": {**valid_entry["analysis"], "how": None}}))
 
         # Defect 4: missing category_id
-        defect_cat = json.loads(json.dumps(valid_entry))
-        defect_cat["category_id"] = None
-        self.assertFalse(is_valid_analysis_entry(defect_cat))
+        self.assertFalse(is_valid_analysis_entry({**valid_entry, "category_id": None}))
 
         # Defect 5: non-dict entry
         self.assertFalse(is_valid_analysis_entry("not_a_dict"))

@@ -129,6 +129,31 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
     print(f"[✓] Successfully retrieved {len(items)} starred repositories.")
     return items
 
+def _build_repo_entry(fn: str, info: Dict[str, Any], existing: Dict[str, Any], gql: Optional[Dict[str, Any]] = None, readme: str = "") -> Dict[str, Any]:
+    base = info.get("base_obj", {})
+    gql = gql or {}
+    license_id = (gql.get("licenseInfo") or {}).get("spdxId")
+    if not license_id and isinstance(base.get("license"), dict):
+        license_id = base["license"].get("spdx_id")
+    license_id = license_id or existing.get("license")
+    topics = [t["topic"]["name"] for t in gql.get("repositoryTopics", {}).get("nodes", []) if t and t.get("topic")]
+    lang = (gql.get("primaryLanguage") or {}).get("name")
+    return {
+        "full_name": fn,
+        "starred_at": info.get("starred_at") or existing.get("starred_at"),
+        "description": gql.get("description") or base.get("description") or existing.get("description", ""),
+        "stargazers_count": gql.get("stargazerCount") or base.get("stargazers_count") or existing.get("stargazers_count", 0),
+        "forks_count": gql.get("forkCount") or base.get("forks_count") or existing.get("forks_count", 0),
+        "primary_language": lang or base.get("language") or existing.get("primary_language"),
+        "topics": topics or base.get("topics") or existing.get("topics", []),
+        "url": gql.get("url") or base.get("html_url") or existing.get("url"),
+        "homepage": gql.get("homepageUrl") or base.get("homepage") or existing.get("homepage"),
+        "pushed_at": gql.get("pushedAt") or base.get("pushed_at") or existing.get("pushed_at"),
+        "created_at": gql.get("createdAt") or base.get("created_at") or existing.get("created_at"),
+        "license": license_id,
+        "readme": readme or existing.get("readme", "")
+    }
+
 def fetch_repo_details(
     starred_items: List[Dict[str, Any]],
     force: bool = False,
@@ -252,48 +277,10 @@ def fetch_repo_details(
                         if len(readme_text) > config.README_MAX_CHARS:
                             readme_text = readme_text[:config.README_MAX_CHARS] + "\n...(truncated for analysis)"
 
-                        topics = [
-                            t["topic"]["name"]
-                            for t in gql_repo.get("repositoryTopics", {}).get("nodes", [])
-                            if t and t.get("topic")
-                        ]
-                        
-                        lang = gql_repo.get("primaryLanguage", {})
-                        lang_name = lang.get("name") if lang else None
-
-                        repos_cache[fn] = {
-                            "full_name": fn,
-                            "starred_at": info["starred_at"] or existing_repo.get("starred_at"),
-                            "description": gql_repo.get("description") or info["base_obj"].get("description") or existing_repo.get("description", ""),
-                            "stargazers_count": gql_repo.get("stargazerCount") or info["base_obj"].get("stargazers_count") or existing_repo.get("stargazers_count", 0),
-                            "forks_count": gql_repo.get("forkCount") or info["base_obj"].get("forks_count") or existing_repo.get("forks_count", 0),
-                            "primary_language": lang_name or info["base_obj"].get("language") or existing_repo.get("primary_language"),
-                            "topics": topics or info["base_obj"].get("topics") or existing_repo.get("topics", []),
-                            "url": gql_repo.get("url") or info["base_obj"].get("html_url") or existing_repo.get("url"),
-                            "homepage": gql_repo.get("homepageUrl") or info["base_obj"].get("homepage") or existing_repo.get("homepage"),
-                            "pushed_at": gql_repo.get("pushedAt") or info["base_obj"].get("pushed_at") or existing_repo.get("pushed_at"),
-                            "created_at": gql_repo.get("createdAt") or info["base_obj"].get("created_at") or existing_repo.get("created_at"),
-                            "license": (gql_repo.get("licenseInfo", {}) or {}).get("spdxId") or existing_repo.get("license"),
-                            "readme": readme_text or existing_repo.get("readme", "")
-                        }
+                        repos_cache[fn] = _build_repo_entry(fn, info, existing_repo, gql_repo, readme_text)
                     else:
                         # Fallback to basic REST info and preserve existing readme if any
-                        base_obj = info["base_obj"]
-                        repos_cache[fn] = {
-                            "full_name": fn,
-                            "starred_at": info["starred_at"] or existing_repo.get("starred_at"),
-                            "description": base_obj.get("description") or existing_repo.get("description", ""),
-                            "stargazers_count": base_obj.get("stargazers_count") or existing_repo.get("stargazers_count", 0),
-                            "forks_count": base_obj.get("forks_count") or existing_repo.get("forks_count", 0),
-                            "primary_language": base_obj.get("language") or existing_repo.get("primary_language"),
-                            "topics": base_obj.get("topics") or existing_repo.get("topics", []),
-                            "url": base_obj.get("html_url") or existing_repo.get("url"),
-                            "homepage": base_obj.get("homepage") or existing_repo.get("homepage"),
-                            "pushed_at": base_obj.get("pushed_at") or existing_repo.get("pushed_at"),
-                            "created_at": base_obj.get("created_at") or existing_repo.get("created_at"),
-                            "license": (base_obj.get("license", {}) or {}).get("spdx_id") if isinstance(base_obj.get("license"), dict) else existing_repo.get("license"),
-                            "readme": existing_repo.get("readme", "")
-                        }
+                        repos_cache[fn] = _build_repo_entry(fn, info, existing_repo)
             except Exception as e:
                 print(f"Error parsing GraphQL batch: {e}")
         else:
@@ -302,22 +289,7 @@ def fetch_repo_details(
             for alias, info in alias_map.items():
                 fn = info["full_name"]
                 if fn not in repos_cache:
-                    base_obj = info["base_obj"]
-                    repos_cache[fn] = {
-                        "full_name": fn,
-                        "starred_at": info["starred_at"],
-                        "description": base_obj.get("description") or "",
-                        "stargazers_count": base_obj.get("stargazers_count") or 0,
-                        "forks_count": base_obj.get("forks_count") or 0,
-                        "primary_language": base_obj.get("language"),
-                        "topics": base_obj.get("topics") or [],
-                        "url": base_obj.get("html_url"),
-                        "homepage": base_obj.get("homepage"),
-                        "pushed_at": base_obj.get("pushed_at"),
-                        "created_at": base_obj.get("created_at"),
-                        "license": (base_obj.get("license", {}) or {}).get("spdx_id") if isinstance(base_obj.get("license"), dict) else None,
-                        "readme": ""
-                    }
+                    repos_cache[fn] = _build_repo_entry(fn, info, {})
 
         print(f"  [+] Progress: {min(chunk_idx + batch_size, len(needed))} / {len(needed)} repos processed.")
         time.sleep(0.3)

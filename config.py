@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -23,7 +24,6 @@ README_MAX_CHARS = 10000  # Cap README length per repo to avoid memory bloat
 
 def atomic_save_json(filepath: Path, data: any, indent: int = 2) -> None:
     """Safely write JSON to a temporary file first, then atomically replace target."""
-    import json
     filepath = Path(filepath)
     filepath.parent.mkdir(parents=True, exist_ok=True)
     temp_file = filepath.with_suffix(f".tmp.{os.getpid()}")
@@ -38,7 +38,6 @@ def atomic_save_json(filepath: Path, data: any, indent: int = 2) -> None:
 
 def safe_load_json(filepath: Path, default: any = None) -> any:
     """Safely load JSON from file, returning default if file is missing, empty, or corrupted."""
-    import json
     filepath = Path(filepath)
     if not filepath.exists():
         return default

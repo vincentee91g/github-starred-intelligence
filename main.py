@@ -50,7 +50,7 @@ def main():
 
     if args.generate_only:
         print("[*] Mode: Generate HTML dashboard only.")
-        if not config.GROUPS_CACHE_FILE.exists() and not config.ANALYSIS_CACHE_FILE.exists() and not config.REPOS_CACHE_FILE.exists():
+        if not any(f.exists() for f in (config.GROUPS_CACHE_FILE, config.ANALYSIS_CACHE_FILE, config.REPOS_CACHE_FILE)):
             print("[!] Error: No cache files found to generate report. Run pipeline first without --generate-only.")
             sys.exit(1)
         try:

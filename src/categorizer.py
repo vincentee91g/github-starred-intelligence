@@ -295,10 +295,7 @@ PRIORITY_FOUNDATIONS = {
 }
 
 # Explicit mapping dictionary combining target Top 5 and curated boundary overrides
-EXPLICIT_MAP: Dict[str, str] = {}
-for cat, repos in TARGET_TOP5.items():
-    for r in repos:
-        EXPLICIT_MAP[r.lower()] = cat
+EXPLICIT_MAP: Dict[str, str] = {r.lower(): cat for cat, repos in TARGET_TOP5.items() for r in repos}
 
 ADDITIONAL_MAP = {
     'microsoft/autogen': 'multi_agent_swarms',
@@ -385,8 +382,7 @@ ADDITIONAL_MAP = {
     'bugzmanov/bookokrat': 'web_doc_parsing_ocr',
 }
 
-for k, v in ADDITIONAL_MAP.items():
-    EXPLICIT_MAP[k.lower()] = v
+EXPLICIT_MAP.update({k.lower(): v for k, v in ADDITIONAL_MAP.items()})
 
 def clean_text(text: str) -> str:
     text = re.sub(r'https?://\S+', '', (text or ''))
