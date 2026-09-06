@@ -1,7 +1,9 @@
 # GitHub Starred Repositories Intelligence Pipeline 🌟
 
 > **已 Star 開源專案智慧分析與精選儀表板系統**  
-> 全量擷取個人已 Starred 的 364 個 GitHub 開源專案，深度萃取每個專案的 **Why (動機痛點)**、**How (技術架構)**、**What (核心功能)** 與 **Stars 數**，劃分為 **20 大精細技術領域**。每一種類皆以**結構化表格**呈現所有專案的完整資訊（告別傳統卡片網格），並由固定代碼評分邏輯遴選出各領域 **Top 5 標竿專案**，結合 LLM 進行深度的**優缺點橫向交叉比對**與**適用場景決策指引**，產出高品質繁體中文 (`zh-TW`) 獨立互動式 HTML 視覺化儀表板。
+> 全量擷取個人已 Starred 的 364 個 GitHub 開源專案，深度萃取每個專案的 **Why (動機痛點)**、**How (技術架構)**、**What (核心功能)** 與 **Stars 數**，劃分為 **20 大精細技術領域**。每一種類皆以**結構化表格**呈現所有專案的完整資訊（告別傳統卡片網格），並由固定代碼評分邏輯遴選出各領域 **Top 5 標竿專案**，結合 LLM 進行深度的**優缺點橫向交叉比對**與**適用場景決策指引**，產出高品質繁體中文 (`zh-TW`) 獨立互動式 HTML 視覺化儀表板。  
+>  
+> 🌐 **線上即時互動儀表板 (GitHub Pages)**: [https://vincentee91g.github.io/github-starred-intelligence/](https://vincentee91g.github.io/github-starred-intelligence/)
 
 ---
 
@@ -53,6 +55,8 @@
 
 ```
 git_repo/
+├── .github/
+│   └── workflows/deploy.yml       # GitHub Actions 每日自動排程與 Pages 部署
 ├── .gitignore                     # Git 忽略規則
 ├── README.md                      # 專案說明與增量更新指南
 ├── main.py                        # 主執行入口 (CLI)
@@ -64,6 +68,13 @@ git_repo/
 │   ├── categorizer.py             # 20 大領域分類、固定邏輯評分與 Top 5 評選
 │   ├── top5_evaluations.py        # LLM 深度橫向交叉對比、優缺點分析與場景指引
 │   └── generator.py               # 繁體中文現代化互動 HTML 表格儀表板生成器
+├── tests/                         # 端到端自動化測試套件 (19/19 Passing)
+│   ├── run_all_tests.py           # 統一測試執行器
+│   ├── test_distribution.py       # 364 倉庫分佈完整性測試
+│   ├── test_top5_structure.py     # Top 5 評選與畫像對齊測試
+│   ├── test_zero_dependencies.py  # 100% Python 標準庫驗證
+│   ├── test_cache_schemas.py      # 快取 JSON Schema 規範驗證
+│   └── test_resilience_and_caching.py # 快取容錯與原子自癒測試
 ├── data/
 │   ├── starred_with_dates.json    # 已 Star 倉庫與收藏時間戳記快取
 │   ├── repos_cache.json           # 倉庫中繼資料與 README 內文快取
