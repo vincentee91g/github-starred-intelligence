@@ -66,7 +66,7 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
     if incremental and existing_items:
         first_page_output = run_gh_command([
             "api",
-            "user/starred?per_page=100",
+            f"users/{config.GITHUB_USERNAME}/starred?per_page=100",
             "-H", "Accept: application/vnd.github.star+json"
         ])
         if first_page_output:
@@ -101,7 +101,7 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
     # Full fetch
     cmd = [
         "api",
-        "user/starred?per_page=100",
+        f"users/{config.GITHUB_USERNAME}/starred?per_page=100",
         "-H", "Accept: application/vnd.github.star+json",
         "--paginate",
         "--slurp"
@@ -118,6 +118,10 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
         items = [it for page in parsed for it in page]
     else:
         items = parsed
+
+    if existing_items and len(items) < len(existing_items) * 0.5:
+        print(f"[!] Warning: Retrieved only {len(items)} repos which is substantially less than cached {len(existing_items)}. Keeping existing cache.")
+        return existing_items
 
     # Save to cache atomically
     config.atomic_save_json(config.STARRED_CACHE_FILE, items)

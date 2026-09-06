@@ -17,6 +17,7 @@ GROUPS_CACHE_FILE = DATA_DIR / "groups_cache.json"
 HTML_OUTPUT_FILE = OUTPUT_DIR / "index.html"
 
 # Batching & API limits
+GITHUB_USERNAME = os.environ.get("GITHUB_USERNAME", "vincentee91g")
 GRAPHQL_BATCH_SIZE = 20
 README_MAX_CHARS = 10000  # Cap README length per repo to avoid memory bloat
 
