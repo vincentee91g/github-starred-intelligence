@@ -89,21 +89,8 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
             return existing_items
         raise RuntimeError("GitHub API returned no repos and no local cache available.")
 
-    # For incremental: identify newly starred repos and combine with existing
-    if incremental and existing_items:
-        current_set = {it.get("repo", {}).get("full_name") for it in items}
-        new_items = [it for it in items if it.get("repo", {}).get("full_name") not in existing_map]
-
-        if not new_items:
-            print(f"[✓] Incremental check: Starred list is already up to date ({len(items)} repos).")
-            config.atomic_save_json(config.STARRED_CACHE_FILE, items)
-            return items
-        else:
-            print(f"[✓] Incremental sync: Found {len(new_items)} new starred repositories (total: {len(items)}).")
-            config.atomic_save_json(config.STARRED_CACHE_FILE, items)
-            return items
-
-    # First run or full mode
+    new_count = sum(it.get("repo", {}).get("full_name") not in existing_map for it in items)
+    print(f"[✓] {new_count} newly starred repositories.")
     config.atomic_save_json(config.STARRED_CACHE_FILE, items)
     print(f"[✓] Successfully retrieved {len(items)} starred repositories.")
     return items
