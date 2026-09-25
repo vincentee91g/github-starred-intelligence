@@ -44,10 +44,10 @@ def run_gh_command(args: List[str], max_retries: int = 3, retry_delay: float = 2
 def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
     """
     Fetch all starred repositories with their starred_at timestamps.
-    If incremental is True, checks existing cache and updates only newly starred items.
+    If incremental is True, does full fetch but returns only new items combined with cached.
     """
     existing_items: List[Dict[str, Any]] = []
-    existing_map: Dict[str, Dict[str, Any]] = {}
+    existing_map: Dict[str, str] = {}  # full_name -> starred_at
     if config.STARRED_CACHE_FILE.exists():
         raw_data = config.safe_load_json(config.STARRED_CACHE_FILE, default=[])
         if isinstance(raw_data, list) and len(raw_data) > 0 and isinstance(raw_data[0], list):
@@ -58,47 +58,11 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
             repo = it.get("repo", {})
             fn = repo.get("full_name")
             if fn:
-                existing_map[fn] = it
+                existing_map[fn] = it.get("starred_at", "")
 
     print(f"[*] Fetching starred repos from GitHub (incremental={incremental})...")
-    
-    # If incremental and we have existing items, fetch first page first to see if any new
-    if incremental and existing_items:
-        first_page_output = run_gh_command([
-            "api",
-            f"users/{config.GITHUB_USERNAME}/starred?per_page=100",
-            "-H", "Accept: application/vnd.github.star+json"
-        ])
-        if first_page_output:
-            try:
-                first_page = json.loads(first_page_output)
-                hit_existing = False
-                new_items = []
-                for item in first_page:
-                    fn = item.get("repo", {}).get("full_name")
-                    if fn in existing_map:
-                        hit_existing = True
-                        break
-                    else:
-                        new_items.append(item)
-                
-                if hit_existing:
-                    if not new_items:
-                        print(f"[✓] Incremental check: Starred list is already up to date ({len(existing_items)} repos).")
-                        return existing_items
-                    else:
-                        print(f"[✓] Incremental sync: Found {len(new_items)} new starred repositories.")
-                        combined = new_items + existing_items
-                        config.atomic_save_json(config.STARRED_CACHE_FILE, combined)
-                        return combined
-            except Exception as e:
-                print(f"Failed incremental check, falling back to full fetch: {e}")
-        else:
-            if existing_items:
-                print("[!] GitHub CLI query failed; falling back to cached starred list.")
-                return existing_items
 
-    # Full fetch
+    # Always do full fetch to get all stars accurately
     cmd = [
         "api",
         f"users/{config.GITHUB_USERNAME}/starred?per_page=100",
@@ -119,13 +83,28 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
     else:
         items = parsed
 
-    if existing_items and len(items) < len(existing_items) * 0.5:
-        print(f"[!] Warning: Retrieved only {len(items)} repos which is substantially less than cached {len(existing_items)}. Keeping existing cache.")
-        return existing_items
+    if not items:
+        if existing_items:
+            print("[!] Warning: Retrieved 0 repos (possible API issue). Keeping existing cache.")
+            return existing_items
+        raise RuntimeError("GitHub API returned no repos and no local cache available.")
 
-    # Save to cache atomically
+    # For incremental: identify newly starred repos and combine with existing
+    if incremental and existing_items:
+        current_set = {it.get("repo", {}).get("full_name") for it in items}
+        new_items = [it for it in items if it.get("repo", {}).get("full_name") not in existing_map]
+
+        if not new_items:
+            print(f"[✓] Incremental check: Starred list is already up to date ({len(items)} repos).")
+            config.atomic_save_json(config.STARRED_CACHE_FILE, items)
+            return items
+        else:
+            print(f"[✓] Incremental sync: Found {len(new_items)} new starred repositories (total: {len(items)}).")
+            config.atomic_save_json(config.STARRED_CACHE_FILE, items)
+            return items
+
+    # First run or full mode
     config.atomic_save_json(config.STARRED_CACHE_FILE, items)
-
     print(f"[✓] Successfully retrieved {len(items)} starred repositories.")
     return items
 
