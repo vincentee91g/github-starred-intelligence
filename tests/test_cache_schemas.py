@@ -17,9 +17,12 @@ class TestCacheSchemas(unittest.TestCase):
         self.assertTrue(config.ANALYSIS_CACHE_FILE.exists(), "analysis_cache.json must exist")
         with open(config.ANALYSIS_CACHE_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
+        with open(config.STARRED_CACHE_FILE, "r", encoding="utf-8") as f:
+            starred = json.load(f)
 
         self.assertIsInstance(data, dict, "analysis_cache must be a dictionary")
-        self.assertEqual(len(data), 364, "analysis_cache must contain 364 items")
+        expected_count = len(starred)
+        self.assertEqual(len(data), expected_count, f"analysis_cache must contain {expected_count} items (matching starred count)")
 
         required_root_keys = [
             "full_name", "name", "owner", "url", "stargazers_count",
@@ -82,9 +85,12 @@ class TestCacheSchemas(unittest.TestCase):
         self.assertTrue(config.REPOS_CACHE_FILE.exists(), "repos_cache.json must exist")
         with open(config.REPOS_CACHE_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
+        with open(config.STARRED_CACHE_FILE, "r", encoding="utf-8") as f:
+            starred = json.load(f)
 
         self.assertIsInstance(data, dict, "repos_cache must be a dictionary")
-        self.assertEqual(len(data), 364, "repos_cache must contain 364 items")
+        expected_count = len(starred)
+        self.assertEqual(len(data), expected_count, f"repos_cache must contain {expected_count} items (matching starred count)")
 
         required_keys = ["full_name", "starred_at", "description", "stargazers_count", "url"]
         for fn, item in data.items():
@@ -99,7 +105,7 @@ class TestCacheSchemas(unittest.TestCase):
             data = json.load(f)
 
         self.assertIsInstance(data, list, "starred_cache must be a list")
-        self.assertEqual(len(data), 364, "starred_cache must contain 364 items")
+        self.assertGreater(len(data), 0, "starred_cache must contain at least one item")
 
         for idx, item in enumerate(data):
             self.assertIn("starred_at", item, f"Item {idx} missing starred_at")

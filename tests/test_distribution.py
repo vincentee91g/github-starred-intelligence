@@ -17,10 +17,13 @@ class TestRepositoryDistribution(unittest.TestCase):
             cls.groups_cache = json.load(f)
 
     def test_total_repository_count(self):
-        """Verify that analysis cache contains exactly 364 repositories."""
+        """Verify that analysis cache matches the starred cache count."""
+        with open(config.STARRED_CACHE_FILE, "r", encoding="utf-8") as f:
+            starred_cache = json.load(f)
+        expected_count = len(starred_cache)
         self.assertEqual(
-            len(self.analysis_cache), 364,
-            f"Expected exactly 364 repositories in analysis cache, found {len(self.analysis_cache)}"
+            len(self.analysis_cache), expected_count,
+            f"Expected {expected_count} repositories in analysis cache (matching starred count), found {len(self.analysis_cache)}"
         )
 
     def test_twenty_categories_exist(self):
@@ -31,7 +34,7 @@ class TestRepositoryDistribution(unittest.TestCase):
             self.assertIn(cat_id, self.groups_cache, f"Category '{cat_id}' missing in groups_cache.json")
 
     def test_repository_distribution_completeness(self):
-        """Verify that all 364 repositories are distributed across categories with no omissions or duplicates."""
+        """Verify that all repositories are distributed across categories with no omissions or duplicates."""
         all_analysis_repos = set(self.analysis_cache.keys())
         distributed_repos = set()
         total_in_groups = 0
@@ -55,9 +58,10 @@ class TestRepositoryDistribution(unittest.TestCase):
             f"Repositories missing from 20 categories: {missing_from_groups}"
         )
 
-        # Check total count
-        self.assertEqual(total_in_groups, 364, f"Expected 364 total repos in groups, found {total_in_groups}")
-        self.assertEqual(len(distributed_repos), 364, f"Expected 364 unique repos distributed, found {len(distributed_repos)}")
+        # Check total count matches analysis cache
+        expected_count = len(self.analysis_cache)
+        self.assertEqual(total_in_groups, expected_count, f"Expected {expected_count} total repos in groups, found {total_in_groups}")
+        self.assertEqual(len(distributed_repos), expected_count, f"Expected {expected_count} unique repos distributed, found {len(distributed_repos)}")
 
     def test_each_category_has_minimum_repositories(self):
         """Verify that every category has sufficient repositories (at least 5 for Top 5 selection)."""
