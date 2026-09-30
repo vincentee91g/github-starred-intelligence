@@ -343,6 +343,36 @@ CURATED_PROFILES = {
         "why": "為解決開發者向 AI Agent 發送 Prompt 時，受限於「未知的未知（Unknown Unknowns）」，在盲點未明前貿然實作導致後續返工與重構成本極為高昂的困境。",
         "how": "將 Anthropic 團隊工程實踐精華提煉為 11 個標準化 Agent Skills，在實作前、中、後引入盲點審查、反向訪談、原型發散與上下文審計等確定性認知對齊步驟。",
         "what": "提供 11 套開箱即用的認知對齊技能包（blindspot-pass、interview-me、implementation-plan 等），全面支援 Claude Code、Codex、Hermes 及任何符合 SKILL.md 規範之智能體。"
+    },
+    "pingdotgg/t3code": {
+        "why": "為了解決開發者在本地終端運行多個 AI 編程智能體時，缺乏直觀可視化的控制介面，無法隨時透過行動裝置或 Web 遠端監控、介入與引導 Agent 任務執行之痛點。",
+        "how": "打造專屬的 Agent Harness 控制中樞（Control Surface），提供 iOS/Android 行動端 App 與 Web 介面，與本機端 Agent 執行環境保持低延遲雙向通訊與事件同步。",
+        "what": "提供 T3 Code 遠端控制中樞、iOS/Android 跨平台行動應用、Web 儀表板與本機 Agent 串接橋接器。"
+    },
+    "earendil-works/pi": {
+        "why": "為了解決構建終端編程 Agent 與命令列 AI 工具時，不同 LLM 服務商 API 協議割裂、Agent 迴圈缺乏統一抽象且終端 TUI 互動實現繁複的瓶頸。",
+        "how": "以 TypeScript 打造統一的 LLM API 封裝層，規範化標準 Agent 執行迴圈（Agent Loop），並深度整合終端文字介面（TUI）渲染引擎。",
+        "what": "提供跨模型統一 LLM API 介面、輕量級 Agent 迴圈框架、高度互動式 TUI 介面庫與開箱即用的編程 Agent CLI。"
+    },
+    "alexgreensh/token-optimizer": {
+        "why": "為了解決 AI 編程 Agent 長時間運行時幽靈 Token（Ghost Tokens）大量累積、Context 視窗自動壓縮（Compaction）後導致上下文品質嚴重劣化與思考幻覺的難題。",
+        "how": "透過精確偵測隱形或低價值 Token 佔用並進行結構化修復，建立抗壓縮最佳化機制，在維持上下文關鍵資訊密度的同時避免 Context 衰退。",
+        "what": "提供 Claude Code / Agent 專用 Token 最佳化技能（Skill）、幽靈 Token 掃描與修正器、上下文健康度診斷工具。"
+    },
+    "keli-wen/agy-staff": {
+        "why": "為了解決 Claude Code 或 OpenAI Codex 執行複雜大型任務時 Token 成本高昂、高階模型推論延遲較長，且缺乏低成本高速度的助理 Agent 進行實質分工之痛點。",
+        "how": "將 Google 官方 Antigravity CLI (`agy`) 作為極速 Gemini 3.8 Flash 員工進行角色化封裝，提供主管編排指引（lead）與五種專項角色（staffer、researcher、reviewer、implementer、ask）分工協同。",
+        "what": "提供支援 Claude Code 與 Codex 的 agy-staff 插件、五大多模型專員角色定義、自動指派工作流與模型端 Jobs 技能。"
+    },
+    "alexgreensh/anidoodle": {
+        "why": "為了解決傳統網頁動效與向量藝術手寫代碼繁雜、難以保證跨環境多輪渲染絕對一致，且缺乏專為 Agent 設計之代碼驅動動畫庫的問題。",
+        "how": "採用代碼化藝術與動效規範（Code-as-Art），基於 TypeScript 與 Canvas/SVG 建立具備高度重現性的確定性渲染管線，支援數十種視覺風格。",
+        "what": "提供專為 Agent 設計的繪圖與動效擴展技能（anidoodle Skill）、交互式 Web 藝術範本、可編程影片及定格動畫渲染工具。"
+    },
+    "getpaseo/paseo": {
+        "why": "為了解決同時啟動與調度多個編程智能體（Coding Agents）時，缺乏集中式跨裝置編排系統，無法隨時在桌面端與行動裝置自由切換與監控協同進度的困擾。",
+        "how": "建立輕量跨平台編排中樞，支援多 Agent 任務狀態即時同步、會話生命週期管理與行動端/桌面端遠端連線通道。",
+        "what": "提供 Paseo 多 Agent 編排伺服器、桌面端管理介面、行動端遠端監控應用與多智能體任務協同調度工具。"
     }
 }
 
@@ -468,7 +498,13 @@ def run_analysis_pipeline(force: bool = False) -> Dict[str, Any]:
     updated_count = 0
     for full_name, r_info in repos_cache.items():
         existing = analysis_cache.get(full_name)
-        if full_name not in analysis_cache or force or not is_valid_analysis_entry(existing):
+        is_curated_updated = False
+        if full_name in CURATED_PROFILES and existing:
+            curated_why = CURATED_PROFILES[full_name].get("why")
+            if existing.get("analysis", {}).get("why") != curated_why:
+                is_curated_updated = True
+
+        if full_name not in analysis_cache or force or not is_valid_analysis_entry(existing) or is_curated_updated:
             analyzed = analyze_repository(full_name, r_info)
             analysis_cache[full_name] = analyzed
             updated_count += 1
@@ -476,6 +512,7 @@ def run_analysis_pipeline(force: bool = False) -> Dict[str, Any]:
     print(f"[✓] Analysis pipeline processed {updated_count} new/updated repositories (Total: {len(analysis_cache)}).")
 
     # Save analysis cache atomically
+    analysis_cache = {k: v for k, v in analysis_cache.items() if k in repos_cache}
     config.atomic_save_json(config.ANALYSIS_CACHE_FILE, analysis_cache)
 
     return analysis_cache

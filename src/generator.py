@@ -921,7 +921,7 @@ def generate_html_report() -> Path:
     <div class="header-container">
       <div class="logo-section">
         <h1>🌟 GitHub Starred Repositories 智慧分析儀表板</h1>
-        <p>全量 364 個開源專案 · 20 大精細技術領域 · 各領域 Top 5 優缺點交叉對比 · 完整表格呈現 (繁體中文 zh-TW)</p>
+        <p>全量 {total_repos} 個開源專案 · 20 大精細技術領域 · 各領域 Top 5 優缺點交叉對比 · 完整表格呈現 (繁體中文 zh-TW)</p>
       </div>
       <div class="header-actions">
         <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="切換深色 / 淺色主題">🌓 切換主題</button>
@@ -990,7 +990,7 @@ def generate_html_report() -> Path:
           <p>每一種類均以表格呈現每個專案的完整資訊（專案名稱、Stars、Why 痛點、How 架構、What 功能、標籤），支援表頭吸頂、即時搜尋與欄位排序</p>
         </div>
         <div style="display: flex; align-items: center; gap: 0.8rem;">
-          <span id="filteredCountBadge" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: 700;">顯示 364 / 364 個專案</span>
+          <span id="filteredCountBadge" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: 700;">顯示 {total_repos} / {total_repos} 個專案</span>
         </div>
       </div>
 
@@ -1062,7 +1062,7 @@ def generate_html_report() -> Path:
 # 1. 智慧增量同步 (僅檢查新增 Starred 倉庫，秒級完成)
 python3 main.py --incremental
 
-# 2. 全量強制重構 (重新從 GitHub API 擷取所有 364 個倉庫與 README)
+# 2. 全量強制重構 (重新從 GitHub API 擷取所有 {total_repos} 個倉庫與 README)
 python3 main.py --full
 
 # 3. 僅重新生成 HTML 儀表板

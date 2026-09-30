@@ -62,7 +62,7 @@ This document establishes the architectural principles, operational constraints,
 │   └── generator.py            # Frameless HTML table generator with dark/light mode
 └── tests/                      # Automated test suite (19/19 passing)
     ├── run_all_tests.py        # Master test runner
-    ├── test_distribution.py    # 364 repo complete coverage & 20 categories check
+    ├── test_distribution.py    # All starred repos complete coverage & 20 categories check
     ├── test_top5_structure.py  # 100 Top 5 project profiles structure validation
     ├── test_zero_dependencies.py # AST-based standard library verification
     ├── test_cache_schemas.py   # Strict schema enforcement for data/*.json

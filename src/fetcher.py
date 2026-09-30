@@ -161,7 +161,8 @@ def fetch_repo_details(
             else:
                 needed.append(item)
 
-    print(f"[*] Repos needing detail/README fetch: {len(needed)} / {len(starred_items)}")
+    valid_names = {item.get("repo", item).get("full_name") for item in starred_items if item.get("repo", item).get("full_name")}
+    repos_cache = {k: v for k, v in repos_cache.items() if k in valid_names}
 
     if not needed:
         config.atomic_save_json(config.REPOS_CACHE_FILE, repos_cache)
@@ -261,6 +262,8 @@ def fetch_repo_details(
         time.sleep(0.3)
 
     # Save to disk atomically
+    valid_names = {item.get("repo", item).get("full_name") for item in starred_items if item.get("repo", item).get("full_name")}
+    repos_cache = {k: v for k, v in repos_cache.items() if k in valid_names}
     config.atomic_save_json(config.REPOS_CACHE_FILE, repos_cache)
 
     print(f"[✓] Repo details cache updated. Total repos in cache: {len(repos_cache)}")

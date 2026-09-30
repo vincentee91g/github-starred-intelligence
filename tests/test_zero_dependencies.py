@@ -14,7 +14,17 @@ class TestZeroDependencies(unittest.TestCase):
         base_dir = Path(__file__).resolve().parent.parent
 
         # Built-in standard library module names
-        stdlib_names = set(sys.stdlib_module_names)
+        if hasattr(sys, "stdlib_module_names"):
+            stdlib_names = set(sys.stdlib_module_names)
+        else:
+            stdlib_names = set(sys.builtin_module_names)
+            stdlib_names.update([
+                "argparse", "ast", "asyncio", "collections", "contextlib", "copy", "csv",
+                "datetime", "decimal", "functools", "glob", "hashlib", "io", "itertools",
+                "json", "logging", "math", "os", "pathlib", "random", "re", "shutil",
+                "socket", "sqlite3", "string", "subprocess", "sys", "tempfile", "time",
+                "typing", "unittest", "urllib", "uuid"
+            ])
 
         local_modules = {"config", "src", "tests"}
 

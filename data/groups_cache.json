@@ -172,6 +172,29 @@
         "description": "Lightweight coding agent that runs in your terminal"
       },
       {
+        "full_name": "earendil-works/pi",
+        "name": "pi",
+        "owner": "earendil-works",
+        "url": "https://github.com/earendil-works/pi",
+        "homepage": null,
+        "stargazers_count": 109211,
+        "forks_count": 13874,
+        "primary_language": "TypeScript",
+        "topics": [],
+        "license": "MIT",
+        "starred_at": "2026-09-14T04:58:28Z",
+        "pushed_at": "2026-09-24T22:09:55Z",
+        "category_id": "coding_agents_cli",
+        "category_name": "AI 終端編程 Agent 與官方 CLI 工具",
+        "readme_has_content": true,
+        "analysis": {
+          "why": "為了解決構建終端編程 Agent 與命令列 AI 工具時，不同 LLM 服務商 API 協議割裂、Agent 迴圈缺乏統一抽象且終端 TUI 互動實現繁複的瓶頸。",
+          "how": "以 TypeScript 打造統一的 LLM API 封裝層，規範化標準 Agent 執行迴圈（Agent Loop），並深度整合終端文字介面（TUI）渲染引擎。",
+          "what": "提供跨模型統一 LLM API 介面、輕量級 Agent 迴圈框架、高度互動式 TUI 介面庫與開箱即用的編程 Agent CLI。"
+        },
+        "description": "AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI"
+      },
+      {
         "full_name": "google-gemini/gemini-cli",
         "name": "gemini-cli",
         "owner": "google-gemini",
@@ -1106,7 +1129,7 @@
     ],
     "comparison": {
       "summary": "深度整合本地 Shell、檔案系統與 Git 工作流之自主編程 Agent 與官方 CLI 開發助手。",
-      "repo_count": 40,
+      "repo_count": 41,
       "aspects": [
         "系統接管層級 (純終端 Shell 交互 vs 跨桌面 GUI 深度調度)",
         "模型適配彈性 (專屬思考模型綁定 vs 開源模型本地私有化相容)",
@@ -1473,9 +1496,9 @@
         "category_name": "多 Agent 協同編排、蜂巢架構與自主組織",
         "readme_has_content": true,
         "analysis": {
-          "why": "為了解決相關領域痛點：Orchestrate multiple coding agents from desktop and mobile，提供專用自動化與工程解方。",
-          "how": "基於 TypeScript，結合 agents, claude-code, codex 打造，遵循模組化高內聚設計原則，提供可重現且易擴展之整合管線。",
-          "what": "提供功能：Orchestrate multiple coding agents from desktop and mobile，支援相應命令行與程式調用介面。"
+          "why": "為了解決同時啟動與調度多個編程智能體（Coding Agents）時，缺乏集中式跨裝置編排系統，無法隨時在桌面端與行動裝置自由切換與監控協同進度的困擾。",
+          "how": "建立輕量跨平台編排中樞，支援多 Agent 任務狀態即時同步、會話生命週期管理與行動端/桌面端遠端連線通道。",
+          "what": "提供 Paseo 多 Agent 編排伺服器、桌面端管理介面、行動端遠端監控應用與多智能體任務協同調度工具。"
         },
         "description": "Orchestrate multiple coding agents from desktop and mobile"
       },
@@ -1689,6 +1712,40 @@
         "description": "Agents and workflow for GitHub Copilot"
       },
       {
+        "full_name": "keli-wen/agy-staff",
+        "name": "agy-staff",
+        "owner": "keli-wen",
+        "url": "https://github.com/keli-wen/agy-staff",
+        "homepage": null,
+        "stargazers_count": 593,
+        "forks_count": 40,
+        "primary_language": "JavaScript",
+        "topics": [
+          "agentic-ai",
+          "ai-agents",
+          "antigravity",
+          "antigravity-cli",
+          "claude-code",
+          "claude-code-plugin",
+          "code-review",
+          "codex",
+          "codex-plugin",
+          "developer-tools"
+        ],
+        "license": "MIT",
+        "starred_at": "2026-09-22T04:07:15Z",
+        "pushed_at": "2026-09-18T08:31:37Z",
+        "category_id": "multi_agent_swarms",
+        "category_name": "多 Agent 協同編排、蜂巢架構與自主組織",
+        "readme_has_content": true,
+        "analysis": {
+          "why": "為了解決 Claude Code 或 OpenAI Codex 執行複雜大型任務時 Token 成本高昂、高階模型推論延遲較長，且缺乏低成本高速度的助理 Agent 進行實質分工之痛點。",
+          "how": "將 Google 官方 Antigravity CLI (`agy`) 作為極速 Gemini 3.8 Flash 員工進行角色化封裝，提供主管編排指引（lead）與五種專項角色（staffer、researcher、reviewer、implementer、ask）分工協同。",
+          "what": "提供支援 Claude Code 與 Codex 的 agy-staff 插件、五大多模型專員角色定義、自動指派工作流與模型端 Jobs 技能。"
+        },
+        "description": "Hire Google's Antigravity CLI (agy) as a fast Gemini staffer for Claude Code and OpenAI Codex."
+      },
+      {
         "full_name": "marian2js/opengoat",
         "name": "opengoat",
         "owner": "marian2js",
@@ -1861,7 +1918,7 @@
     ],
     "comparison": {
       "summary": "跨模型多角色分工、去中心化蜂巢通訊、獨立 Worktree 交叉審查與分散式 Agent 協同架構。",
-      "repo_count": 22,
+      "repo_count": 23,
       "aspects": [
         "協同拓撲 (層級主控分發 vs 匿名盲審投票 vs 去中心化 Pub/Sub 廣播)",
         "狀態收斂機制 (多輪辯論共識 vs 集中式狀態機 vs 獨立任務隊列)",
@@ -2230,6 +2287,29 @@
         "description": "MLX: An array framework for Apple silicon"
       },
       {
+        "full_name": "pingdotgg/t3code",
+        "name": "t3code",
+        "owner": "pingdotgg",
+        "url": "https://github.com/pingdotgg/t3code",
+        "homepage": "https://t3.codes",
+        "stargazers_count": 23507,
+        "forks_count": 6072,
+        "primary_language": "TypeScript",
+        "topics": [],
+        "license": "MIT",
+        "starred_at": "2026-09-10T00:14:59Z",
+        "pushed_at": "2026-09-25T05:17:23Z",
+        "category_id": "agent_runtimes_sandboxes",
+        "category_name": "Agent 執行環境、沙箱隔離與 Harness 鷹架",
+        "readme_has_content": true,
+        "analysis": {
+          "why": "為了解決開發者在本地終端運行多個 AI 編程智能體時，缺乏直觀可視化的控制介面，無法隨時透過行動裝置或 Web 遠端監控、介入與引導 Agent 任務執行之痛點。",
+          "how": "打造專屬的 Agent Harness 控制中樞（Control Surface），提供 iOS/Android 行動端 App 與 Web 介面，與本機端 Agent 執行環境保持低延遲雙向通訊與事件同步。",
+          "what": "提供 T3 Code 遠端控制中樞、iOS/Android 跨平台行動應用、Web 儀表板與本機 Agent 串接橋接器。"
+        },
+        "description": ""
+      },
+      {
         "full_name": "browsh-org/browsh",
         "name": "browsh",
         "owner": "browsh-org",
@@ -2538,7 +2618,7 @@
     ],
     "comparison": {
       "summary": "為編程智能體提供安全隔離之沙箱 Runtime、微內核動態插件 Harness、測試期自演化架構與架構方法論。",
-      "repo_count": 19,
+      "repo_count": 20,
       "aspects": [
         "架構解耦性 (微內核熱插拔插件 vs 內建單體執行沙箱)",
         "安全防護力 (即時環境狀態快照回滾 vs 容器隔離 vs 宿主機信任執行)",
@@ -4247,6 +4327,40 @@
         "description": "Chrome extension to extract styles from any website and generate DESIGN.md files and design skills for AI based on TypeUI"
       },
       {
+        "full_name": "alexgreensh/anidoodle",
+        "name": "anidoodle",
+        "owner": "alexgreensh",
+        "url": "https://github.com/alexgreensh/anidoodle",
+        "homepage": "https://alexgreenshpun.com",
+        "stargazers_count": 714,
+        "forks_count": 55,
+        "primary_language": "TypeScript",
+        "topics": [
+          "agent-skills",
+          "animation",
+          "canvas",
+          "claude-code",
+          "claude-skills",
+          "creative-coding",
+          "deterministic",
+          "generative-art",
+          "hand-drawn",
+          "illustration"
+        ],
+        "license": "Apache-2.0",
+        "starred_at": "2026-09-26T23:30:37Z",
+        "pushed_at": "2026-09-28T12:21:12Z",
+        "category_id": "ui_ux_frontend_skills",
+        "category_name": "前端 UI/UX、動效微調與設計系統 Skills",
+        "readme_has_content": true,
+        "analysis": {
+          "why": "為了解決傳統網頁動效與向量藝術手寫代碼繁雜、難以保證跨環境多輪渲染絕對一致，且缺乏專為 Agent 設計之代碼驅動動畫庫的問題。",
+          "how": "採用代碼化藝術與動效規範（Code-as-Art），基於 TypeScript 與 Canvas/SVG 建立具備高度重現性的確定性渲染管線，支援數十種視覺風格。",
+          "what": "提供專為 Agent 設計的繪圖與動效擴展技能（anidoodle Skill）、交互式 Web 藝術範本、可編程影片及定格動畫渲染工具。"
+        },
+        "description": "Art and animation, written as code. Illustrations, loops, interactive web art, launch-videos and scored films in dozens of styles, identical on every render."
+      },
+      {
         "full_name": "BrikerMan/skilless.ai",
         "name": "skilless.ai",
         "owner": "BrikerMan",
@@ -4277,7 +4391,7 @@
     ],
     "comparison": {
       "summary": "賦予 Agent 現代前端審美直覺、動畫時序微調、設計系統對齊與互動元件生成的專項技能集。",
-      "repo_count": 6,
+      "repo_count": 7,
       "aspects": [
         "動效物理模型 (Framer Motion 彈簧物理 vs 靜態 CSS 排版規則)",
         "設計約束維度 (間距比例字體美學 vs SaaS 現代儀表板元件庫)",
@@ -7822,6 +7936,40 @@
         "description": "Burning through your subscriptions too fast? Paying for stuff you never use? Stop guessing. OpenUsage is free and open source."
       },
       {
+        "full_name": "alexgreensh/token-optimizer",
+        "name": "token-optimizer",
+        "owner": "alexgreensh",
+        "url": "https://github.com/alexgreensh/token-optimizer",
+        "homepage": "https://token-optimizer.dev",
+        "stargazers_count": 2458,
+        "forks_count": 192,
+        "primary_language": "Python",
+        "topics": [
+          "agentskills",
+          "claude-code",
+          "token-optimization",
+          "claude-code-skill",
+          "context-window",
+          "token-usage",
+          "ghost-tokens",
+          "context-engineering",
+          "token-optimizer",
+          "claude-plugin"
+        ],
+        "license": "NOASSERTION",
+        "starred_at": "2026-09-28T13:38:23Z",
+        "pushed_at": "2026-09-30T06:56:12Z",
+        "category_id": "token_cost_monitors",
+        "category_name": "Token 用量統計、費用監控與選單列看板",
+        "readme_has_content": true,
+        "analysis": {
+          "why": "為了解決 AI 編程 Agent 長時間運行時幽靈 Token（Ghost Tokens）大量累積、Context 視窗自動壓縮（Compaction）後導致上下文品質嚴重劣化與思考幻覺的難題。",
+          "how": "透過精確偵測隱形或低價值 Token 佔用並進行結構化修復，建立抗壓縮最佳化機制，在維持上下文關鍵資訊密度的同時避免 Context 衰退。",
+          "what": "提供 Claude Code / Agent 專用 Token 最佳化技能（Skill）、幽靈 Token 掃描與修正器、上下文健康度診斷工具。"
+        },
+        "description": "Find the ghost tokens. Fix them. Survive compaction. Avoid context quality decay. "
+      },
+      {
         "full_name": "jianshuo/ccglass",
         "name": "ccglass",
         "owner": "jianshuo",
@@ -8017,7 +8165,7 @@
     ],
     "comparison": {
       "summary": "本地優先之即時 Token 消耗追蹤、macOS 選單列常駐儀表板、多帳戶配額預警與成本支出審計。",
-      "repo_count": 11,
+      "repo_count": 12,
       "aspects": [
         "展示載體形態 (macOS 原生選單列圖示 vs 本地優先 Web 儀表板 vs 極簡 CLI)",
         "監控粒度層次 (帳戶級重置視窗倒數 vs 代碼行級 Token 燃燒率分析)",
@@ -12323,29 +12471,6 @@
         "description": " This project is dedicated to collecting high-quality macOS software and organizing them systematically by different categories for easy search and use."
       },
       {
-        "full_name": "earendil-works/pi",
-        "name": "pi",
-        "owner": "earendil-works",
-        "url": "https://github.com/earendil-works/pi",
-        "homepage": null,
-        "stargazers_count": 109211,
-        "forks_count": 13874,
-        "primary_language": "TypeScript",
-        "topics": [],
-        "license": "MIT",
-        "starred_at": "2026-09-14T04:58:28Z",
-        "pushed_at": "2026-09-24T22:09:55Z",
-        "category_id": "terminal_system_productivity",
-        "category_name": "macOS 系統擴展、終端生產力與日常效率工具",
-        "readme_has_content": true,
-        "analysis": {
-          "why": "為了解決相關領域痛點：AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI，提供專用自動化與工程解方。",
-          "how": "基於 TypeScript 打造，遵循模組化高內聚設計原則，提供可重現且易擴展之整合管線。",
-          "what": "提供功能：AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI，支援相應命令行與程式調用介面。"
-        },
-        "description": "AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI"
-      },
-      {
         "full_name": "koala73/worldmonitor",
         "name": "worldmonitor",
         "owner": "koala73",
@@ -12634,29 +12759,6 @@
           "what": "提供功能：Render markdown on the CLI, with pizzazz! 💅🏻，支援相應命令行與程式調用介面。"
         },
         "description": "Render markdown on the CLI, with pizzazz! 💅🏻"
-      },
-      {
-        "full_name": "pingdotgg/t3code",
-        "name": "t3code",
-        "owner": "pingdotgg",
-        "url": "https://github.com/pingdotgg/t3code",
-        "homepage": "https://t3.codes",
-        "stargazers_count": 23507,
-        "forks_count": 6072,
-        "primary_language": "TypeScript",
-        "topics": [],
-        "license": "MIT",
-        "starred_at": "2026-09-10T00:14:59Z",
-        "pushed_at": "2026-09-25T05:17:23Z",
-        "category_id": "terminal_system_productivity",
-        "category_name": "macOS 系統擴展、終端生產力與日常效率工具",
-        "readme_has_content": true,
-        "analysis": {
-          "why": "為提昇 macOS 系統擴展、終端生產力與日常效率工具 工作流效率與自動化程度而構建。",
-          "how": "基於 TypeScript 打造，遵循模組化高內聚設計原則，提供可重現且易擴展之整合管線。",
-          "what": "提供完整源碼、CLI 執行工具、配置範例與開發者整合介面。"
-        },
-        "description": ""
       },
       {
         "full_name": "espanso/espanso",
@@ -13032,40 +13134,6 @@
         "description": "Spec-driven development for coding agents — a desktop app, a CLI, and skills for Codex, Claude Code, Cursor, Copilot, Antigravity and Junie"
       },
       {
-        "full_name": "keli-wen/agy-staff",
-        "name": "agy-staff",
-        "owner": "keli-wen",
-        "url": "https://github.com/keli-wen/agy-staff",
-        "homepage": null,
-        "stargazers_count": 593,
-        "forks_count": 40,
-        "primary_language": "JavaScript",
-        "topics": [
-          "agentic-ai",
-          "ai-agents",
-          "antigravity",
-          "antigravity-cli",
-          "claude-code",
-          "claude-code-plugin",
-          "code-review",
-          "codex",
-          "codex-plugin",
-          "developer-tools"
-        ],
-        "license": "MIT",
-        "starred_at": "2026-09-22T04:07:15Z",
-        "pushed_at": "2026-09-18T08:31:37Z",
-        "category_id": "terminal_system_productivity",
-        "category_name": "macOS 系統擴展、終端生產力與日常效率工具",
-        "readme_has_content": true,
-        "analysis": {
-          "why": "為了解決此領域的核心瓶頸：agy-staff lets your senior agents delegate to `agy`, which ships fast Gemini 3.8 Flash. Five personas: staffer (general-purpose), researcher, reviewer (code **and** plans/decisions), implementer, and ask — plus a model-facing jobs skill. Claude Code ",
-          "how": "採用技術架構：`lead` adds task orchestration guidance for your current agent. Within lead, orient enough to frame the assignment, delegate substantive work to `staffer` by default, wait for the result, then assess it and integrate or follow up. Specialists provide",
-          "what": "提供功能：Hire Google's Antigravity CLI (agy) as a fast Gemini staffer for Claude Code and OpenAI Codex.，支援相應命令行與程式調用介面。"
-        },
-        "description": "Hire Google's Antigravity CLI (agy) as a fast Gemini staffer for Claude Code and OpenAI Codex."
-      },
-      {
         "full_name": "doggy8088/better-rm",
         "name": "better-rm",
         "owner": "doggy8088",
@@ -13278,7 +13346,7 @@
     ],
     "comparison": {
       "summary": "終端 Zsh 配置、macOS 選單列管理、視窗螢幕控制、自動化替換與極客必備日常高效工具。",
-      "repo_count": 37,
+      "repo_count": 34,
       "aspects": [
         "應用層級領域 (命令列 Shell 終端增強 vs 本地 WebUI 大模型對話介面 vs macOS 系統選單列)",
         "生態沉澱規模 (百萬級開源插件與主題總匯 vs 原創專題極致精緻應用)",

@@ -380,6 +380,13 @@ ADDITIONAL_MAP = {
 
     'searxng/searxng': 'web_doc_parsing_ocr',
     'bugzmanov/bookokrat': 'web_doc_parsing_ocr',
+
+    'pingdotgg/t3code': 'agent_runtimes_sandboxes',
+    'earendil-works/pi': 'coding_agents_cli',
+    'alexgreensh/token-optimizer': 'token_cost_monitors',
+    'keli-wen/agy-staff': 'multi_agent_swarms',
+    'alexgreensh/anidoodle': 'ui_ux_frontend_skills',
+    'getpaseo/paseo': 'multi_agent_swarms',
 }
 
 EXPLICIT_MAP.update({k.lower(): v for k, v in ADDITIONAL_MAP.items()})
