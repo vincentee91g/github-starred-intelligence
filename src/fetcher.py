@@ -4,10 +4,13 @@ Supports full synchronization as well as fast incremental fetching.
 """
 
 import json
+import os
 import subprocess
 import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 import config
 
@@ -41,10 +44,94 @@ def run_gh_command(args: List[str], max_retries: int = 3, retry_delay: float = 2
             time.sleep(retry_delay)
     return None
 
+def _fetch_starred_via_public_rest() -> Optional[List[Dict[str, Any]]]:
+    """
+    Fetch the user's starred repositories directly from GitHub's REST API.
+
+    GitHub Actions' repository-scoped GITHUB_TOKEN is not a user token and may
+    return an empty list for /users/{username}/starred. To avoid silently
+    freezing the cache, Actions uses the public endpoint without that token.
+    Set STARRED_GITHUB_TOKEN to a user token with Starring: read if private
+    starred repositories must also be included.
+    """
+    per_page = 100
+    page = 1
+    items: List[Dict[str, Any]] = []
+    token = os.environ.get("STARRED_GITHUB_TOKEN")
+
+    while True:
+        url = (
+            f"https://api.github.com/users/{config.GITHUB_USERNAME}/starred"
+            f"?per_page={per_page}&page={page}&sort=created&direction=desc"
+        )
+        headers = {
+            "Accept": "application/vnd.github.star+json",
+            "User-Agent": "github-starred-intelligence",
+            "X-GitHub-Api-Version": "2026-03-10",
+        }
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+
+        try:
+            req = Request(url, headers=headers)
+            with urlopen(req, timeout=30) as response:
+                page_items = json.loads(response.read().decode("utf-8"))
+        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+            print(f"[!] Public starred REST fetch failed on page {page}: {exc}")
+            return None
+
+        if not isinstance(page_items, list):
+            print(f"[!] Unexpected starred REST response on page {page}; expected a list.")
+            return None
+
+        if not page_items:
+            break
+
+        items.extend(page_items)
+        if len(page_items) < per_page:
+            break
+
+        page += 1
+        time.sleep(0.1)
+
+    return items
+
+
+def _fetch_starred_via_gh() -> Optional[List[Dict[str, Any]]]:
+    """Fetch starred repositories through the locally authenticated gh CLI."""
+    cmd = [
+        "api",
+        f"users/{config.GITHUB_USERNAME}/starred?per_page=100",
+        "-H", "Accept: application/vnd.github.star+json",
+        "--paginate",
+        "--slurp"
+    ]
+    raw_output = run_gh_command(cmd)
+    if not raw_output:
+        return None
+
+    try:
+        parsed = json.loads(raw_output)
+    except json.JSONDecodeError as exc:
+        print(f"[!] Failed to parse gh starred response: {exc}")
+        return None
+
+    if isinstance(parsed, list) and parsed and isinstance(parsed[0], list):
+        return [it for page in parsed for it in page]
+    if isinstance(parsed, list):
+        return parsed
+    return None
+
+
 def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
     """
     Fetch all starred repositories with their starred_at timestamps.
-    If incremental is True, does full fetch but returns only new items combined with cached.
+
+    On GitHub Actions, prefer the public REST endpoint so the repository-scoped
+    GITHUB_TOKEN cannot make the user-star query silently return an empty list.
+    Locally, prefer the user's authenticated gh CLI so private stars remain
+    available. STARRED_GITHUB_TOKEN can be configured in Actions to include
+    private starred repositories there as well.
     """
     existing_items: List[Dict[str, Any]] = []
     existing_map: Dict[str, str] = {}  # full_name -> starred_at
@@ -62,35 +149,28 @@ def fetch_starred_list(incremental: bool = False) -> List[Dict[str, Any]]:
 
     print(f"[*] Fetching starred repos from GitHub (incremental={incremental})...")
 
-    # Always do full fetch to get all stars accurately
-    cmd = [
-        "api",
-        f"users/{config.GITHUB_USERNAME}/starred?per_page=100",
-        "-H", "Accept: application/vnd.github.star+json",
-        "--paginate",
-        "--slurp"
-    ]
-    raw_output = run_gh_command(cmd)
-    if not raw_output:
-        if existing_items:
-            print("[!] Full fetch failed, falling back to cached starred list.")
-            return existing_items
-        raise RuntimeError("Failed to fetch starred repos from GitHub CLI.")
-
-    parsed = json.loads(raw_output)
-    if isinstance(parsed, list) and len(parsed) > 0 and isinstance(parsed[0], list):
-        items = [it for page in parsed for it in page]
+    in_actions = os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+    if in_actions:
+        print("[*] GitHub Actions detected; using public starred REST endpoint.")
+        items = _fetch_starred_via_public_rest()
+        if not items:
+            print("[!] Public REST returned no starred repos; trying gh CLI as fallback.")
+            items = _fetch_starred_via_gh()
     else:
-        items = parsed
+        items = _fetch_starred_via_gh()
+        if not items:
+            print("[!] gh CLI returned no starred repos; trying public REST fallback.")
+            items = _fetch_starred_via_public_rest()
 
     if not items:
         if existing_items:
-            print("[!] Warning: Retrieved 0 repos (possible API issue). Keeping existing cache.")
+            print("[!] Warning: Retrieved 0 repos from all sources. Keeping existing cache.")
             return existing_items
         raise RuntimeError("GitHub API returned no repos and no local cache available.")
 
     new_count = sum(it.get("repo", {}).get("full_name") not in existing_map for it in items)
-    print(f"[✓] {new_count} newly starred repositories.")
+    removed_count = sum(fn not in {it.get("repo", {}).get("full_name") for it in items} for fn in existing_map)
+    print(f"[✓] {new_count} newly starred repositories; {removed_count} no longer starred.")
     config.atomic_save_json(config.STARRED_CACHE_FILE, items)
     print(f"[✓] Successfully retrieved {len(items)} starred repositories.")
     return items
